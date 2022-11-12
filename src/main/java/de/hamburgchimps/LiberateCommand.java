@@ -1,15 +1,19 @@
 package de.hamburgchimps;
 
+import io.quarkus.arc.Arc;
 import picocli.CommandLine.Command;
+
+import javax.transaction.Transactional;
 
 @Command
 public class LiberateCommand implements Runnable {
-
-    String name;
-
     @Override
+    @Transactional
     public void run() {
-        System.out.printf("Hello %s, go go commando!\n", name);
+        // Fake request context so that quarkus will call our tenant resolver
+        Arc.container().requestContext().activate();
+        var e = new TestEntity();
+        e.persist();
     }
 
 }
