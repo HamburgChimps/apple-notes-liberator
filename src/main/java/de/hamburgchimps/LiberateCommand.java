@@ -7,5 +7,4 @@ public class LiberateCommand implements Runnable {
     @Override
     public void run() {
     }
-
 }
