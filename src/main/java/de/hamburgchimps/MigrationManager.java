@@ -1,20 +1,23 @@
 package de.hamburgchimps;
 
-import io.quarkus.runtime.StartupEvent;
 import org.flywaydb.core.Flyway;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 @ApplicationScoped
 public class MigrationManager {
-    @Inject
-    Flyway flyway;
-
     @Transactional(Transactional.TxType.NOT_SUPPORTED)
-    public void migrate(@Observes StartupEvent e) {
+    public void migrate() {
+        // We have to configure flyway manually as quarkus will configure
+        // flyway to run on the default datasource and not the one returned by
+        // our TenantConnectionResolver instance.
+        Flyway flyway = Flyway
+                .configure()
+                .dataSource("jdbc:sqlite:foo", "", "")
+                .cleanDisabled(false)
+                .load();
+
         flyway.clean();
         flyway.migrate();
     }

@@ -35,7 +35,7 @@ public class NotesDataStoreResolver implements TenantConnectionResolver {
         props.put(AgroalPropertiesReader.INITIAL_SIZE,"11");
         props.put(AgroalPropertiesReader.MAX_LIFETIME_S,"30");
         props.put(AgroalPropertiesReader.ACQUISITION_TIMEOUT_S,"3");
-        props.put(AgroalPropertiesReader.JDBC_URL,"jdbc:sqlite::memory:");
+        props.put(AgroalPropertiesReader.JDBC_URL,"jdbc:sqlite:foo");
 
         try {
             return new QuarkusConnectionProvider(AgroalDataSource.from(new AgroalPropertiesReader().readProperties(props).get()));
