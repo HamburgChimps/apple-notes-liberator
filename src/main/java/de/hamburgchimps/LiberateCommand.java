@@ -1,6 +1,5 @@
 package de.hamburgchimps;
 
-import io.quarkus.logging.Log;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import picocli.CommandLine;
@@ -13,6 +12,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+
 @QuarkusMain
 @Command
 @SuppressWarnings("unused")
@@ -22,6 +22,17 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
 
     @Override
     public void run() {
+        copyNotesDb();
+    }
+
+    @Override
+    public int run(String... args) {
+        return new CommandLine(this, factory)
+                .setExecutionExceptionHandler(new ExceptionHandler())
+                .execute(args);
+    }
+
+    private void copyNotesDb() {
         var noteStoreDb = new File(Constants.NOTE_STORE_PATH);
 
         if (!noteStoreDb.exists()) {
@@ -34,16 +45,5 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         } catch (IOException e) {
             throw new RuntimeException(UserMessages.CANT_COPY_NOTES_DATABASE);
         }
-
-        Log.info("If found, copy to app dir");
-        Log.info("Try to read from it");
-        Log.info("If reading from it works, start parsing Notes");
-    }
-
-    @Override
-    public int run(String... args) throws Exception {
-        return new CommandLine(this, factory)
-                .setExecutionExceptionHandler(new ExceptionHandler())
-                .execute(args);
     }
 }

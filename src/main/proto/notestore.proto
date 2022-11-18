@@ -1,5 +1,5 @@
 syntax = "proto2";
-
+package com.ciofecaforensics;
 //
 // Common classes used across a few types
 //
