@@ -12,7 +12,6 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-
 @QuarkusMain
 @Command
 @SuppressWarnings("unused")
