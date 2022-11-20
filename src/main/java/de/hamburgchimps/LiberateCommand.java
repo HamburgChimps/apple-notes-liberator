@@ -1,16 +1,19 @@
 package de.hamburgchimps;
 
+import de.hamburgchimps.entity.Note;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @QuarkusMain
 @Command
@@ -20,8 +23,11 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     CommandLine.IFactory factory;
 
     @Override
+    @ActivateRequestContext
     public void run() {
         copyNotesDb();
+
+        List<Note> notes = Note.listAll();
     }
 
     @Override
