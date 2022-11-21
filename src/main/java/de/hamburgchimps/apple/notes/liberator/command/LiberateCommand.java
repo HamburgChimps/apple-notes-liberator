@@ -1,7 +1,9 @@
-package de.hamburgchimps;
+package de.hamburgchimps.apple.notes.liberator.command;
 
-import de.hamburgchimps.entity.Note;
-import io.quarkus.logging.Log;
+import de.hamburgchimps.apple.notes.liberator.Constants;
+import de.hamburgchimps.apple.notes.liberator.ExceptionHandler;
+import de.hamburgchimps.apple.notes.liberator.UserMessages;
+import de.hamburgchimps.apple.notes.liberator.service.NoteService;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import picocli.CommandLine;
@@ -22,14 +24,14 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     @Inject
     CommandLine.IFactory factory;
 
+    @Inject
+    NoteService noteService;
+
     @Override
     @ActivateRequestContext
     public void run() {
         copyNotesDb();
-
-        var notes = Note.listAll();
-
-        Log.debug("hey");
+        noteService.getAllNotes();
     }
 
     @Override

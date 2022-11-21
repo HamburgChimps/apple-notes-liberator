@@ -1,4 +1,4 @@
-package de.hamburgchimps;
+package de.hamburgchimps.apple.notes.liberator;
 
 import picocli.CommandLine;
 

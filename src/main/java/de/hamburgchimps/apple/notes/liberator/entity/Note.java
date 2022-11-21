@@ -1,4 +1,4 @@
-package de.hamburgchimps.entity;
+package de.hamburgchimps.apple.notes.liberator.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

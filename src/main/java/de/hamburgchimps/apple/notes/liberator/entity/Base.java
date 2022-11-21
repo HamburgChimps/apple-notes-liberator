@@ -1,4 +1,4 @@
-package de.hamburgchimps.entity;
+package de.hamburgchimps.apple.notes.liberator.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
