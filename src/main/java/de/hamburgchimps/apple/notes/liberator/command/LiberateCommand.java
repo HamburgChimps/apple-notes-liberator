@@ -4,6 +4,9 @@ import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ExceptionHandler;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
 import de.hamburgchimps.apple.notes.liberator.service.NoteService;
+import io.agroal.api.AgroalDataSource;
+import io.agroal.api.AgroalDataSource.FlushMode;
+import io.quarkus.logging.Log;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import picocli.CommandLine;
@@ -25,13 +28,17 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     CommandLine.IFactory factory;
 
     @Inject
+    AgroalDataSource dataSource;
+
+    @Inject
     NoteService noteService;
 
     @Override
     @ActivateRequestContext
     public void run() {
+        dataSource.flush(FlushMode.IDLE);
         copyNotesDb();
-        noteService.getAllNotes();
+        Log.debugv("{0}", noteService.getAllNotes());
     }
 
     @Override

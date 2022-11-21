@@ -9,4 +9,14 @@ import javax.persistence.Table;
 public class Note extends Base {
     @Column
     public int zNote;
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "zNote=" + zNote +
+                ", zPk=" + zPk +
+                ", zEnt=" + zEnt +
+                ", zOpt=" + zOpt +
+                '}';
+    }
 }
