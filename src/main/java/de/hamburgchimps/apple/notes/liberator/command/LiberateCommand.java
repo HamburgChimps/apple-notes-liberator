@@ -38,7 +38,9 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     public void run() {
         dataSource.flush(FlushMode.IDLE);
         copyNotesDb();
-        Log.debugv("{0}", noteService.getAllNotes());
+        var data= noteService.getAllNotes().stream().map(n -> n.zData).findFirst().orElseThrow();
+
+        Log.debug(data);
     }
 
     @Override
