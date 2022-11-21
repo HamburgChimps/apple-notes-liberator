@@ -1,6 +1,7 @@
 package de.hamburgchimps;
 
 import de.hamburgchimps.entity.Note;
+import io.quarkus.logging.Log;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import picocli.CommandLine;
@@ -10,10 +11,9 @@ import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.nio.file.StandardCopyOption;
 
 @QuarkusMain
 @Command
@@ -27,7 +27,9 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     public void run() {
         copyNotesDb();
 
-        List<Note> notes = Note.listAll();
+        var notes = Note.listAll();
+
+        Log.debug("hey");
     }
 
     @Override
@@ -45,8 +47,9 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         }
 
         try {
-            Files.copy(Path.of(Constants.NOTE_STORE_PATH), Path.of("notes.sqlite"));
-        } catch (FileAlreadyExistsException ignored) {
+            Files.copy(Path.of(Constants.NOTE_STORE_PATH),
+                    Path.of("notes.sqlite"),
+                    StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(UserMessages.CANT_COPY_NOTES_DATABASE);
         }

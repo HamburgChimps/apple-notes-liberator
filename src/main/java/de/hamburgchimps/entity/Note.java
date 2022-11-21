@@ -8,5 +8,5 @@ import javax.persistence.Table;
 @Table(name = "ZICNOTEDATA")
 public class Note extends Base {
     @Column
-    public int znote;
+    public int zNote;
 }
