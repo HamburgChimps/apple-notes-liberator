@@ -38,9 +38,17 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     public void run() {
         dataSource.flush(FlushMode.IDLE);
         copyNotesDb();
-        var data= noteService.getAllNotes().stream().map(n -> n.zData).findFirst().orElseThrow();
 
-        Log.debug(data);
+        var notes = noteService.getAllNotes();
+
+        notes.forEach((n) -> {
+            try {
+                var proto = noteService.parseZData(n.zData);
+                Log.debug(proto);
+            } catch (IOException e) {
+                Log.debugv("Couldn't parse zdata for note with id #{0}", n.zPk);
+            }
+        });
     }
 
     @Override
