@@ -44,6 +44,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         notes.forEach((n) -> {
             try {
                 var proto = noteService.parseZData(n.zData);
+                // TODO: @next parse embedded objects - start with tables
             } catch (IOException e) {
                 Log.debugv("Unable to parse zdata for note with id {0}", n.zPk);
             }
