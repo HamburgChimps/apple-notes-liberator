@@ -1,12 +1,9 @@
 package de.hamburgchimps.apple.notes.liberator.command;
 
-import com.ciofecaforensics.Notestore.NoteStoreProto;
-import com.ciofecaforensics.Notestore.Document;
-import com.ciofecaforensics.Notestore.Note;
-
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ExceptionHandler;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
+import de.hamburgchimps.apple.notes.liberator.data.NoteData;
 import de.hamburgchimps.apple.notes.liberator.service.NoteService;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.AgroalDataSource.FlushMode;
@@ -23,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Optional;
 
 @QuarkusMain
 @Command
@@ -44,18 +40,13 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         dataSource.flush(FlushMode.IDLE);
         copyNotesDb();
 
-        var attributeRuns = noteService
+        var parsedNotes = noteService
                 .getAllNotes()
                 .parallelStream()
-                .filter((n) -> n.zNote == Constants.ZNOTE_ID_WITH_EMBEDDED_TABLE)
-                .map(noteService::parseZData)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(NoteStoreProto::getDocument)
-                .map(Document::getNote)
-                .map(Note::getAttributeRunList)
-                .peek((attributeRunList) -> Log.debug(attributeRunList))
+                .map(NoteData::new)
                 .toList();
+
+        Log.debug(parsedNotes.size());
     }
 
     @Override
