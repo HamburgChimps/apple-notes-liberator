@@ -25,14 +25,14 @@ public class NoteData {
     public NoteData(Note n) {
         this.note = n;
 
-        parseZData();
+        this.parseZData();
 
         if (this.proto == null) {
             return;
         }
 
-        parseText();
-        parseEmbeddedObjects();
+        this.parseText();
+        this.parseEmbeddedObjects();
     }
 
     public String getText() {
