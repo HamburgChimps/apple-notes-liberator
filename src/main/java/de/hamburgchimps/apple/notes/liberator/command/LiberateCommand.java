@@ -1,5 +1,9 @@
 package de.hamburgchimps.apple.notes.liberator.command;
 
+import com.ciofecaforensics.Notestore.NoteStoreProto;
+import com.ciofecaforensics.Notestore.Document;
+import com.ciofecaforensics.Notestore.Note;
+
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ExceptionHandler;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
@@ -19,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 @QuarkusMain
 @Command
@@ -39,16 +44,18 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         dataSource.flush(FlushMode.IDLE);
         copyNotesDb();
 
-        var notes = noteService.getAllNotes();
-
-        notes.forEach((n) -> {
-            try {
-                var proto = noteService.parseZData(n.zData);
-                // TODO: @next parse embedded objects - start with tables
-            } catch (IOException e) {
-                Log.debugv("Unable to parse zdata for note with id {0}", n.zPk);
-            }
-        });
+        var attributeRuns = noteService
+                .getAllNotes()
+                .parallelStream()
+                .filter((n) -> n.zNote == Constants.ZNOTE_ID_WITH_EMBEDDED_TABLE)
+                .map(noteService::parseZData)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(NoteStoreProto::getDocument)
+                .map(Document::getNote)
+                .map(Note::getAttributeRunList)
+                .peek((attributeRunList) -> Log.debug(attributeRunList))
+                .toList();
     }
 
     @Override

@@ -8,9 +8,5 @@ import javax.persistence.Table;
 public class Note extends Base {
     public int zNote;
 
-    public byte[] zCryptoInitializationVector;
-
-    public String zCryptoTag;
-
     public byte[] zData;
 }

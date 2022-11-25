@@ -2,6 +2,7 @@ package de.hamburgchimps.apple.notes.liberator.service;
 
 import com.ciofecaforensics.Notestore.NoteStoreProto;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
+import io.quarkus.logging.Log;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.ByteArrayInputStream;
@@ -19,14 +20,22 @@ public class NoteService {
         return Note.listAll();
     }
 
-    public Optional<NoteStoreProto> parseZData(byte[] zData) throws IOException {
+    public Optional<NoteStoreProto> parseZData(Note n) {
+        byte[] zData = n.zData;
+
         if (zData == null) {
             return Optional.empty();
         }
 
-        byte[] decompressed = (isCompressed(zData)) ? decompress(zData) : zData;
+        try {
+            byte[] decompressed = (isCompressed(zData)) ? decompress(zData) : zData;
 
-        return Optional.of(NoteStoreProto.parseFrom(decompressed));
+            return Optional.of(NoteStoreProto.parseFrom(decompressed));
+
+        } catch (IOException e) {
+            Log.debugv("Could not parse zData for note with id {0}", n.zPk);
+            return Optional.empty();
+        }
     }
 
     private boolean isCompressed(byte[] data) {
