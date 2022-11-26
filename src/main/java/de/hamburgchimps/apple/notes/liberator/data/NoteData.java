@@ -15,7 +15,7 @@ public class NoteData {
 
     private String text;
 
-    private List<EmbeddedObject> embeddedObjects;
+    private List<EmbeddedObjectData> embeddedObjects;
 
     private NoteStoreProto proto;
 
@@ -39,7 +39,7 @@ public class NoteData {
         return text;
     }
 
-    public List<EmbeddedObject> getEmbeddedObjects() {
+    public List<EmbeddedObjectData> getEmbeddedObjects() {
         return embeddedObjects;
     }
 

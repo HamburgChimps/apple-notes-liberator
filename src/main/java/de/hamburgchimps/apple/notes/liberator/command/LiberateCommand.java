@@ -3,7 +3,9 @@ package de.hamburgchimps.apple.notes.liberator.command;
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ExceptionHandler;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
+import de.hamburgchimps.apple.notes.liberator.data.EmbeddedObjectDataType;
 import de.hamburgchimps.apple.notes.liberator.data.NoteData;
+import de.hamburgchimps.apple.notes.liberator.service.EmbeddedObjectService;
 import de.hamburgchimps.apple.notes.liberator.service.NoteService;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.AgroalDataSource.FlushMode;
@@ -25,14 +27,25 @@ import java.nio.file.StandardCopyOption;
 @Command
 @SuppressWarnings("unused")
 public class LiberateCommand implements Runnable, QuarkusApplication {
-    @Inject
-    CommandLine.IFactory factory;
+    private final CommandLine.IFactory factory;
+
+
+    private final AgroalDataSource dataSource;
+
+    private final NoteService noteService;
+
+    private final EmbeddedObjectService embeddedObjectService;
 
     @Inject
-    AgroalDataSource dataSource;
-
-    @Inject
-    NoteService noteService;
+    public LiberateCommand(CommandLine.IFactory factory,
+                           AgroalDataSource dataSource,
+                           NoteService noteService,
+                           EmbeddedObjectService embeddedObjectService) {
+        this.factory = factory;
+        this.dataSource = dataSource;
+        this.noteService = noteService;
+        this.embeddedObjectService = embeddedObjectService;
+    }
 
     @Override
     @ActivateRequestContext
@@ -44,6 +57,12 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
                 .getAllNotes()
                 .parallelStream()
                 .map(NoteData::new)
+                .toList();
+
+        var embeddedObjects = embeddedObjectService
+                .getAllEmbeddedObjects()
+                .stream()
+                .filter((e) -> EmbeddedObjectDataType.byIdentifier(e.zTypeUti) == EmbeddedObjectDataType.TABLE)
                 .toList();
 
         Log.debug(parsedNotes.size());
