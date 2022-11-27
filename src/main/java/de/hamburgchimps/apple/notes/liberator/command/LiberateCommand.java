@@ -14,7 +14,6 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
 import javax.enterprise.context.control.ActivateRequestContext;
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,9 +30,6 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
 
     private final AgroalDataSource dataSource;
 
-
-    @Inject
-    @SuppressWarnings("un")
     public LiberateCommand(CommandLine.IFactory factory, AgroalDataSource dataSource) {
         this.factory = factory;
         this.dataSource = dataSource;
