@@ -3,10 +3,8 @@ package de.hamburgchimps.apple.notes.liberator.command;
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ExceptionHandler;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
-import de.hamburgchimps.apple.notes.liberator.data.EmbeddedObjectDataType;
 import de.hamburgchimps.apple.notes.liberator.data.NoteData;
-import de.hamburgchimps.apple.notes.liberator.service.EmbeddedObjectService;
-import de.hamburgchimps.apple.notes.liberator.service.NoteService;
+import de.hamburgchimps.apple.notes.liberator.entity.Note;
 import io.agroal.api.AgroalDataSource;
 import io.agroal.api.AgroalDataSource.FlushMode;
 import io.quarkus.logging.Log;
@@ -22,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 @QuarkusMain
 @Command
@@ -32,19 +31,10 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
 
     private final AgroalDataSource dataSource;
 
-    private final NoteService noteService;
-
-    private final EmbeddedObjectService embeddedObjectService;
-
     @Inject
-    public LiberateCommand(CommandLine.IFactory factory,
-                           AgroalDataSource dataSource,
-                           NoteService noteService,
-                           EmbeddedObjectService embeddedObjectService) {
+    public LiberateCommand(CommandLine.IFactory factory, AgroalDataSource dataSource) {
         this.factory = factory;
         this.dataSource = dataSource;
-        this.noteService = noteService;
-        this.embeddedObjectService = embeddedObjectService;
     }
 
     @Override
@@ -53,16 +43,9 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         dataSource.flush(FlushMode.IDLE);
         copyNotesDb();
 
-        var parsedNotes = noteService
-                .getAllNotes()
+        var parsedNotes = getAllNotes()
                 .parallelStream()
                 .map(NoteData::new)
-                .toList();
-
-        var embeddedObjects = embeddedObjectService
-                .getAllEmbeddedObjects()
-                .stream()
-                .filter((e) -> EmbeddedObjectDataType.byIdentifier(e.zTypeUti) == EmbeddedObjectDataType.TABLE)
                 .toList();
 
         Log.debug(parsedNotes.size());
@@ -89,5 +72,9 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         } catch (IOException e) {
             throw new RuntimeException(UserMessages.CANT_COPY_NOTES_DATABASE);
         }
+    }
+
+    private List<Note> getAllNotes() {
+        return Note.listAll();
     }
 }
