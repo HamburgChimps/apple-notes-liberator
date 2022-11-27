@@ -1,5 +1,6 @@
 package de.hamburgchimps.apple.notes.liberator.data;
 
+import com.ciofecaforensics.Notestore;
 import com.ciofecaforensics.Notestore.NoteStoreProto;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 
@@ -63,11 +64,16 @@ public class NoteData {
     }
 
     private void parseText() {
-        this.text = this.proto.getDocument().getNote().getNoteText();
+        this.text = this.getProtoNote().getNoteText();
     }
 
     private void parseEmbeddedObjects() {
         // TODO: @next parse table
         this.embeddedObjects = List.of();
+        // get all attachments from attribute runs
+    }
+
+    private Notestore.Note getProtoNote() {
+        return this.proto.getDocument().getNote();
     }
 }
