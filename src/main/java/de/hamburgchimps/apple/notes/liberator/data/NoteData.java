@@ -2,7 +2,6 @@ package de.hamburgchimps.apple.notes.liberator.data;
 
 import com.ciofecaforensics.Notestore.NoteStoreProto;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
-import io.quarkus.logging.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -69,7 +68,6 @@ public class NoteData {
 
     private void parseEmbeddedObjects() {
         // TODO: @next parse table
-        Log.debug(this.note.embeddedObjects);
         this.embeddedObjects = List.of();
     }
 }
