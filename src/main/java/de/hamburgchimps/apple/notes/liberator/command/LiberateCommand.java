@@ -31,7 +31,9 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
 
     private final AgroalDataSource dataSource;
 
+
     @Inject
+    @SuppressWarnings("un")
     public LiberateCommand(CommandLine.IFactory factory, AgroalDataSource dataSource) {
         this.factory = factory;
         this.dataSource = dataSource;
@@ -47,6 +49,8 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
                 .stream()
                 .map(NoteData::new)
                 .toList();
+
+        List<Note> notes = getAllNotes();
 
         Log.debug(parsedNotes.size());
     }

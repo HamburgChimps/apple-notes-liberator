@@ -1,16 +1,19 @@
 package de.hamburgchimps.apple.notes.liberator.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "ZICCLOUDSYNCINGOBJECT")
 public class EmbeddedObject extends Base {
     public String zTypeUti;
 
-    public Integer zNote;
+    @ManyToOne
+    @JoinColumn(name = "zNote", referencedColumnName = "zNote")
+    public Note note;
 
     public LocalDateTime zCreationDate;
 
@@ -23,8 +26,4 @@ public class EmbeddedObject extends Base {
     public byte[] zServerRecordData;
 
     public byte[] zMergeableData;
-
-    public static List<EmbeddedObject> findAllForNote(Note n) {
-        return list("zNote", n.zNote);
-    }
 }
