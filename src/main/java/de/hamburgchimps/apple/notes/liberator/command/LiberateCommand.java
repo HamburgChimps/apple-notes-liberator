@@ -44,7 +44,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         copyNotesDb();
 
         var parsedNotes = getAllNotes()
-                .parallelStream()
+                .stream()
                 .map(NoteData::new)
                 .toList();
 

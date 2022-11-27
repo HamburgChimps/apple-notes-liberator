@@ -21,7 +21,6 @@ public class NoteData {
 
     private final List<Exception> errors = new ArrayList<>();
 
-
     public NoteData(Note n) {
         this.note = n;
 
