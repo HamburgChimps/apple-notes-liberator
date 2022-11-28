@@ -1,14 +1,12 @@
 package de.hamburgchimps.apple.notes.liberator.data;
 
-import de.hamburgchimps.apple.notes.liberator.data.parser.EmbeddedObjectParser;
-import de.hamburgchimps.apple.notes.liberator.data.parser.TableParser;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public enum EmbeddedObjectDataType {
-    TABLE("com.apple.notes.table", new TableParser());
+    TABLE("com.apple.notes.table", Table::new);
 
     private static final Map<String, EmbeddedObjectDataType> IDENTIFIER_TO_TYPE = new HashMap<>();
 
@@ -19,11 +17,11 @@ public enum EmbeddedObjectDataType {
 
     private final String identifier;
 
-    private final EmbeddedObjectParser parser;
+    public final Supplier<? extends EmbeddedObjectData> embeddedObjectDataCreator;
 
-    EmbeddedObjectDataType(String identifier, EmbeddedObjectParser parser) {
+    EmbeddedObjectDataType(String identifier, Supplier<? extends EmbeddedObjectData> embeddedObjectDataCreator) {
         this.identifier = identifier;
-        this.parser = parser;
+        this.embeddedObjectDataCreator = embeddedObjectDataCreator;
     }
 
     public static EmbeddedObjectDataType byIdentifier(String identifier) {

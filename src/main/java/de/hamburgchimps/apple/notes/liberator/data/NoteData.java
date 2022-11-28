@@ -2,11 +2,13 @@ package de.hamburgchimps.apple.notes.liberator.data;
 
 import com.ciofecaforensics.Notestore;
 import com.ciofecaforensics.Notestore.NoteStoreProto;
+import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static de.hamburgchimps.apple.notes.liberator.ByteUtils.decompress;
 import static de.hamburgchimps.apple.notes.liberator.ByteUtils.isCompressed;
@@ -20,7 +22,7 @@ public class NoteData {
 
     private NoteStoreProto proto;
 
-    private final List<Exception> errors = new ArrayList<>();
+    private final List<String> errors = new ArrayList<>();
 
     public NoteData(Note n) {
         this.note = n;
@@ -43,7 +45,7 @@ public class NoteData {
         return embeddedObjects;
     }
 
-    public List<Exception> getErrors() {
+    public List<String> getErrors() {
         return errors;
     }
 
@@ -59,7 +61,7 @@ public class NoteData {
 
             this.proto = NoteStoreProto.parseFrom(decompressed);
         } catch (IOException e) {
-            this.errors.add(e);
+            this.errors.add(e.getMessage());
         }
     }
 
@@ -68,9 +70,38 @@ public class NoteData {
     }
 
     private void parseEmbeddedObjects() {
-        // TODO: @next parse table
-        this.embeddedObjects = List.of();
-        // get all attachments from attribute runs
+        this.embeddedObjects = this.getProtoNote()
+                .getAttributeRunList()
+                .stream()
+                .filter(Notestore.AttributeRun::hasAttachmentInfo)
+                .map(Notestore.AttributeRun::getAttachmentInfo)
+                .map(this::parseEmbeddedObject)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
+
+    private Optional<EmbeddedObjectData> parseEmbeddedObject(Notestore.AttachmentInfo attachmentInfo) {
+        EmbeddedObject embeddedObject = EmbeddedObject
+                .find("zIdentifier", attachmentInfo.getAttachmentIdentifier())
+                .firstResult();
+
+        var typeIdentifier = embeddedObject.zTypeUti;
+
+        if (typeIdentifier.isEmpty()) {
+            this.errors.add(String.format("Cannot parse embedded object with identifier \"%s\": no type identifier present", attachmentInfo.getAttachmentIdentifier()));
+            return Optional.empty();
+        }
+
+        EmbeddedObjectDataType type = EmbeddedObjectDataType
+                .byIdentifier(typeIdentifier);
+
+        if (type == null) {
+            this.errors.add(String.format("Parsing for embedded objects of type \"%s\" is not yet supported", embeddedObject.zTypeUti));
+            return Optional.empty();
+        }
+
+        return Optional.of(type.embeddedObjectDataCreator.get());
     }
 
     private Notestore.Note getProtoNote() {

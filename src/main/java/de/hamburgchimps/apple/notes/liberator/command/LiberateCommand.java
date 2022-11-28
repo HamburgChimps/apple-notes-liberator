@@ -46,8 +46,6 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
                 .map(NoteData::new)
                 .toList();
 
-        List<Note> notes = getAllNotes();
-
         Log.debug(parsedNotes.size());
     }
 
