@@ -101,6 +101,8 @@ public class NoteData {
             return Optional.empty();
         }
 
+        // TODO: @next change attachment into to embedded object and see if there is
+        //       a way to DRY the protobuf parsing/decompressing a bit
         return Optional.of(type.embeddedObjectDataCreator.apply(attachmentInfo));
     }
 
