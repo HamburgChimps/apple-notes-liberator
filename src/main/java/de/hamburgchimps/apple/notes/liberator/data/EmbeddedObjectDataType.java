@@ -1,9 +1,11 @@
 package de.hamburgchimps.apple.notes.liberator.data;
 
+import com.ciofecaforensics.Notestore;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public enum EmbeddedObjectDataType {
     TABLE("com.apple.notes.table", Table::new);
@@ -17,9 +19,9 @@ public enum EmbeddedObjectDataType {
 
     private final String identifier;
 
-    public final Supplier<? extends EmbeddedObjectData> embeddedObjectDataCreator;
+    public final Function<Notestore.AttachmentInfo, ? extends EmbeddedObjectData> embeddedObjectDataCreator;
 
-    EmbeddedObjectDataType(String identifier, Supplier<? extends EmbeddedObjectData> embeddedObjectDataCreator) {
+    EmbeddedObjectDataType(String identifier, Function<Notestore.AttachmentInfo, ? extends EmbeddedObjectData> embeddedObjectDataCreator) {
         this.identifier = identifier;
         this.embeddedObjectDataCreator = embeddedObjectDataCreator;
     }

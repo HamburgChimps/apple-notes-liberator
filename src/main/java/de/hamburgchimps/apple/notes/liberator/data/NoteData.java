@@ -101,7 +101,7 @@ public class NoteData {
             return Optional.empty();
         }
 
-        return Optional.of(type.embeddedObjectDataCreator.get());
+        return Optional.of(type.embeddedObjectDataCreator.apply(attachmentInfo));
     }
 
     private Notestore.Note getProtoNote() {
