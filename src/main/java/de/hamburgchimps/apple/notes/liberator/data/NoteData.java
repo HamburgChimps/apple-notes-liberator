@@ -2,16 +2,13 @@ package de.hamburgchimps.apple.notes.liberator.data;
 
 import com.ciofecaforensics.Notestore;
 import com.ciofecaforensics.Notestore.NoteStoreProto;
+import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
 import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static de.hamburgchimps.apple.notes.liberator.ByteUtils.decompress;
-import static de.hamburgchimps.apple.notes.liberator.ByteUtils.isCompressed;
 
 public class NoteData {
     private final Note note;
@@ -22,7 +19,7 @@ public class NoteData {
 
     private NoteStoreProto proto;
 
-    private final List<String> errors = new ArrayList<>();
+    private final List<RuntimeException> errors = new ArrayList<>();
 
     public NoteData(Note n) {
         this.note = n;
@@ -45,24 +42,19 @@ public class NoteData {
         return embeddedObjects;
     }
 
-    public List<String> getErrors() {
+    public List<RuntimeException> getErrors() {
         return errors;
     }
 
     private void parseZData() {
-        if (this.note.zData == null) {
+        var parseResult = ProtoUtils.parseProtoUsingParserFromBytes(NoteStoreProto.parser(), this.note.zData);
+
+        if (parseResult.isError()) {
+            this.errors.add(parseResult.error());
             return;
         }
 
-        try {
-            byte[] decompressed = (isCompressed(this.note.zData))
-                    ? decompress(this.note.zData)
-                    : this.note.zData;
-
-            this.proto = NoteStoreProto.parseFrom(decompressed);
-        } catch (IOException e) {
-            this.errors.add(e.getMessage());
-        }
+        this.proto = parseResult.get();
     }
 
     private void parseText() {
@@ -89,7 +81,7 @@ public class NoteData {
         var typeIdentifier = embeddedObject.zTypeUti;
 
         if (typeIdentifier.isEmpty()) {
-            this.errors.add(String.format("Cannot parse embedded object with identifier \"%s\": no type identifier present", attachmentInfo.getAttachmentIdentifier()));
+            this.errors.add(new RuntimeException(String.format("Cannot parse embedded object with identifier \"%s\": no type identifier present", attachmentInfo.getAttachmentIdentifier())));
             return Optional.empty();
         }
 
@@ -97,13 +89,11 @@ public class NoteData {
                 .byIdentifier(typeIdentifier);
 
         if (type == null) {
-            this.errors.add(String.format("Parsing for embedded objects of type \"%s\" is not yet supported", embeddedObject.zTypeUti));
+            this.errors.add(new RuntimeException(String.format("Parsing for embedded objects of type \"%s\" is not yet supported", embeddedObject.zTypeUti)));
             return Optional.empty();
         }
 
-        // TODO: @next change attachment into to embedded object and see if there is
-        //       a way to DRY the protobuf parsing/decompressing a bit
-        return Optional.of(type.embeddedObjectDataCreator.apply(attachmentInfo));
+        return Optional.of(type.embeddedObjectDataCreator.apply(embeddedObject));
     }
 
     private Notestore.Note getProtoNote() {
