@@ -6,10 +6,10 @@ package com.ciofecaforensics;
 
 //Represents a color
 message Color {
-  required float red = 1;
-  required float green = 2;
-  required float blue = 3;
-  required float alpha = 4;
+  optional float red = 1;
+  optional float green = 2;
+  optional float blue = 3;
+  optional float alpha = 4;
 }
 
 // Represents an attachment (embedded object)
@@ -35,15 +35,15 @@ message ParagraphStyle {
 
 // Represents a checklist item
 message Checklist {
-  required bytes uuid = 1;
-  required int32 done = 2;
+  optional bytes uuid = 1;
+  optional int32 done = 2;
 }
 
 // Represents an object that has pointers to a key and a value, asserting 
 // somehow that the key object has to do with the value object.
 message DictionaryElement {
-  required ObjectID key = 1;
-  required ObjectID value = 2;
+  optional ObjectID key = 1;
+  optional ObjectID value = 2;
 }
 
 // A Dictionary holds many DictionaryElements
@@ -54,25 +54,25 @@ message Dictionary {
 // ObjectIDs are used to identify objects within the protobuf, offsets in an arry, or 
 // a simple String.
 message ObjectID {
-  required uint64 unsigned_integer_value = 2;
-  required string string_value = 4;
-  required int32 object_index = 6;
+  optional uint64 unsigned_integer_value = 2;
+  optional string string_value = 4;
+  optional int32 object_index = 6;
 }
 
 // Register Latest is used to identify the most recent version
 message RegisterLatest {
-  required ObjectID contents = 2;
+  optional ObjectID contents = 2;
 }
 
 // MapEntries have a key that maps to an array of key items and a value that points to an object.
 message MapEntry {
-  required int32 key = 1;
-  required ObjectID value = 2;
+  optional int32 key = 1;
+  optional ObjectID value = 2;
 }
 
 // Represents a "run" of characters that need to be styled/displayed/etc
 message AttributeRun {
-  required int32 length = 1;
+  optional int32 length = 1;
   optional ParagraphStyle paragraph_style = 2;
   optional Font font = 3;
   optional int32 font_weight = 5;
@@ -90,19 +90,19 @@ message AttributeRun {
 
 // Overarching object in a ZNOTEDATA.ZDATA blob
 message NoteStoreProto {
-  required Document document = 2;
+  optional Document document = 2;
 }
 
 // A Document has a Note within it.
 message Document {
-  required int32 version = 2;
-  required Note note = 3;
+  optional int32 version = 2;
+  optional Note note = 3;
 }
 
 // A Note has both text, and then a lot of formatting entries.
 // Other fields are present and not yet included in this proto.
 message Note {
-  required string note_text = 2;
+  optional string note_text = 2;
   repeated AttributeRun attribute_run = 5;
 }
 
@@ -112,13 +112,13 @@ message Note {
 
 // Represents the top level object in a ZMERGEABLEDATA cell
 message MergableDataProto {
-  required MergableDataObject mergable_data_object = 2;
+  optional MergableDataObject mergable_data_object = 2;
 }
 
 // Similar to Document for Notes, this is what holds the mergeable object
 message MergableDataObject {
-  required int32 version = 2; // Asserted to be version in https://github.com/dunhamsteve/notesutils
-  required MergeableDataObjectData mergeable_data_object_data = 3;
+  optional int32 version = 2; // Asserted to be version in https://github.com/dunhamsteve/notesutils
+  optional MergeableDataObjectData mergeable_data_object_data = 3;
 }
 
 // This is the mergeable data object itself and has a lot of entries that are the parts of it 
@@ -133,7 +133,7 @@ message MergeableDataObjectData {
 // Each entry is part of the pbject. For example, one entry might be identifying which 
 // UUIDs are rows, and another might hold the text of a cell.
 message MergeableDataObjectEntry {
-  required RegisterLatest register_latest = 1;
+  optional RegisterLatest register_latest = 1;
   optional List list = 5;
   optional Dictionary dictionary = 6;
   optional UnknownMergeableDataObjectEntryMessage unknown_message = 9;
@@ -158,35 +158,35 @@ message UnknownMergeableDataObjectEntryMessageEntry {
 // The Object Map uses its type to identify what you are looking at and 
 // then a map entry to do something with that value.
 message MergeableDataObjectMap {
-  required int32 type = 1;
+  optional int32 type = 1;
   repeated MapEntry map_entry = 3;
 }
 
 // An ordered set is used to hold structural information for embedded tables
 message OrderedSet {
-  required OrderedSetOrdering ordering = 1;
-  required Dictionary elements = 2;
+  optional OrderedSetOrdering ordering = 1;
+  optional Dictionary elements = 2;
 }
 
 
 // The ordered set ordering identifies rows and columns in embedded tables, with an array 
 // of the objects and contents that map lookup values to originals.
 message OrderedSetOrdering {
-  required OrderedSetOrderingArray array = 1;
-  required Dictionary contents = 2;
+  optional OrderedSetOrderingArray array = 1;
+  optional Dictionary contents = 2;
 }
 
 // This array holds both the text to replace and the array of UUIDs to tell what
 // embedded rows and columns are.
 message OrderedSetOrderingArray {
-  required Note contents = 1;
+  optional Note contents = 1;
   repeated OrderedSetOrderingArrayAttachment attachment = 2;
 }
 
 // This array identifies the UUIDs that are embedded table rows or columns
 message OrderedSetOrderingArrayAttachment {
-  required int32 index = 1;
-  required bytes uuid = 2;
+  optional int32 index = 1;
+  optional bytes uuid = 2;
 }
 
 // A List holds details about multiple objects
@@ -196,9 +196,9 @@ message List {
 
 // A list Entry holds details about a specific object
 message ListEntry {
-  required ObjectID id = 2;
+  optional ObjectID id = 2;
   optional ListEntryDetails details = 3; // I dislike this naming, but don't have better information
-  required ListEntryDetails additional_details = 4;
+  optional ListEntryDetails additional_details = 4;
 }
 
 // List Entry Details hold another object ID and unidentified mapping
@@ -208,6 +208,6 @@ message ListEntryDetails {
 }
 
 message ListEntryDetailsKey {
-  required int32 list_entry_details_type_index = 1;
-  required int32 list_entry_details_key = 2;
+  optional int32 list_entry_details_type_index = 1;
+  optional int32 list_entry_details_key = 2;
 }
