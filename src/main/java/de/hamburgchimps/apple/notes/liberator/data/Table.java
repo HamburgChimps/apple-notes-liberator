@@ -29,6 +29,11 @@ public class Table implements EmbeddedObjectData {
                 .getMergeableDataObjectData()
                 .getMergeableDataObjectEntryList();
 
-        Log.debug("parsing...");
+        data.getMergeableDataObjectEntryList().forEach((emtry) -> {
+            // each entry is a table object
+            // if there is a custom map
+            // and first key is "crTableColumnDirection" + 1 ?
+            // then first string value is table direction
+        });
     }
 }
