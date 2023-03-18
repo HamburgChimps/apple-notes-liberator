@@ -1,14 +1,25 @@
 package de.hamburgchimps.apple.notes.liberator.data;
 
+import com.ciofecaforensics.Notestore.ObjectID;
+import com.ciofecaforensics.Notestore.MapEntry;
 import com.ciofecaforensics.Notestore.MergableDataProto;
-import de.hamburgchimps.apple.notes.liberator.Constants;
+import com.ciofecaforensics.Notestore.MergeableDataObjectEntry;
+import com.ciofecaforensics.Notestore.MergeableDataObjectMap;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
 import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import io.quarkus.logging.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_KEY_NAME;
+import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_UNKNOWN;
+
 public class Table implements EmbeddedObjectData {
 
     private String direction;
+    private final List<MergeableDataObjectEntry> tables = new ArrayList<>();
+    private final List<RuntimeException> errors = new ArrayList<>();
 
     public Table(EmbeddedObject embeddedObject) {
         var result = ProtoUtils.parseProtoUsingParserFromBytes(MergableDataProto.parser(), embeddedObject.zMergeableData);
@@ -16,6 +27,7 @@ public class Table implements EmbeddedObjectData {
         if (result.isError()) {
             Log.error("failed to parse table, see stacktrace starting on next line for more information");
             result.error().printStackTrace();
+            this.errors.add(result.error());
             return;
         }
 
@@ -28,32 +40,33 @@ public class Table implements EmbeddedObjectData {
         var keys = data.getMergeableDataObjectKeyItemList();
         var types = data.getMergeableDataObjectTypeItemList();
         var uuids = data.getMergeableDataObjectUuidItemList();
-        var tables = proto
-                .getMergableDataObject()
-                .getMergeableDataObjectData()
-                .getMergeableDataObjectEntryList();
+        this.tables.addAll(data.getMergeableDataObjectEntryList());
 
-        data.getMergeableDataObjectEntryList().forEach((entry) -> {
-            // each entry is a table object
-            // if there is a custom map
-            // and first key is "crTableColumnDirection" + 1 ?
-            // then first string value is table direction
-
-            // TODO: clean this up!
-            // TODO: why + 1??
-            if (entry.hasCustomMap() && entry.getCustomMap().getMapEntry(0).getKey() == keys.indexOf(Constants.TABLE_DIRECTION_KEY_NAME) + 1) {
-                this.direction = entry.getCustomMap().getMapEntry(0).getValue().getStringValue();
-            }
-        });
-
-        Log.debug(this.direction);
+        this.direction = tables
+                .stream()
+                .filter(MergeableDataObjectEntry::hasCustomMap)
+                .map(MergeableDataObjectEntry::getCustomMap)
+                .map(this::getFirstMapEntry)
+                .filter((entry) -> entry.getKey() == keys.indexOf(TABLE_DIRECTION_KEY_NAME) + 1)
+                .map(MapEntry::getValue)
+                .map(ObjectID::getStringValue)
+                .findFirst()
+                .orElse(TABLE_DIRECTION_UNKNOWN);
     }
 
     public String getDirection() {
         return direction;
     }
 
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public List<MergeableDataObjectEntry> getTables() {
+        return tables;
+    }
+
+    public List<RuntimeException> getErrors() {
+        return errors;
+    }
+
+    private MapEntry getFirstMapEntry(MergeableDataObjectMap customMap) {
+        return customMap.getMapEntry(0);
     }
 }
