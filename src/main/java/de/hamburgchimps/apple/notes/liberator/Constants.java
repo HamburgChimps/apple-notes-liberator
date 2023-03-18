@@ -6,4 +6,6 @@ public class Constants {
     public static final String TABLE_DIRECTION_KEY_NAME = "crTableColumnDirection";
 
     public static final String TABLE_DIRECTION_UNKNOWN = "unknown";
+
+    public static final String TABLE_ROOT_IDENTIFIER = "com.apple.notes.ICTable";
 }
