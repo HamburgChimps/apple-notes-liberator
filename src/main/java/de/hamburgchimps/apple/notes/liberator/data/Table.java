@@ -12,10 +12,15 @@ import io.quarkus.logging.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
+import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_CELL_COLUMNS_KEY_NAME;
+import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_COLUMNS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_UNKNOWN;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROOT_IDENTIFIER;
+import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROWS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_FIND_ROOT;
 import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_PARSE_PROTO;
 
@@ -27,6 +32,12 @@ public class Table implements EmbeddedObjectData {
     private List<ByteString> uuids;
     private final List<MergeableDataObjectEntry> tables = new ArrayList<>();
     private MergeableDataObjectEntry root;
+
+    private final Map<String, Consumer<MergeableDataObjectEntry>> parsers = Map.of(
+            TABLE_ROWS_KEY_NAME, this::parseRows,
+            TABLE_COLUMNS_KEY_NAME, this::parseColumns,
+            TABLE_CELL_COLUMNS_KEY_NAME, this::parseCellColumns
+    );
     private final List<RuntimeException> errors = new ArrayList<>();
 
     public Table(EmbeddedObject embeddedObject) {
@@ -79,6 +90,33 @@ public class Table implements EmbeddedObjectData {
 
     private void parse() {
         Log.debug("parsing table...");
-        // TODO: parse root
+        this.root
+                .getCustomMap()
+                .getMapEntryList()
+                .forEach(this::parseMapEntry);
+    }
+
+    private void parseMapEntry(MapEntry entry) {
+        var key = this.keys.get(entry.getKey());
+        var parser = this.parsers.get(this.keys.get(entry.getKey()));
+
+        if (parser == null) {
+            Log.tracev("no parser registered for key \"{0}\"", key);
+            return;
+        }
+
+        parser.accept(this.tables.get(entry.getValue().getObjectIndex()));
+    }
+
+    private void parseRows(MergeableDataObjectEntry entry) {
+        Log.debug("parsing rows...");
+    }
+
+    private void parseColumns(MergeableDataObjectEntry entry) {
+        Log.debug("parsing columns...");
+    }
+
+    private void parseCellColumns(MergeableDataObjectEntry entry) {
+        Log.debug("parsing cell columns...");
     }
 }
