@@ -113,6 +113,7 @@ public class Table implements EmbeddedObjectData {
         parser.accept(this.tables.get(entry.getValue().getObjectIndex()));
     }
 
+    // TODO clean this up
     private void parseRows(MergeableDataObjectEntry entry) {
         Log.debug("parsing rows...");
         entry

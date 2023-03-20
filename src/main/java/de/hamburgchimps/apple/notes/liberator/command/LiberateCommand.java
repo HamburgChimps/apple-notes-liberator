@@ -55,6 +55,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     }
 
     private void copyNotesDb() {
+        // TODO allow specifying path to file
         var noteStoreDb = new File(Constants.NOTE_STORE_PATH);
 
         if (!noteStoreDb.exists()) {
