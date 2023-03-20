@@ -11,6 +11,7 @@ import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import io.quarkus.logging.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -32,6 +33,10 @@ public class Table implements EmbeddedObjectData {
     private List<ByteString> uuids;
     private final List<MergeableDataObjectEntry> tables = new ArrayList<>();
     private MergeableDataObjectEntry root;
+
+    private int numRows = 0;
+
+    private final Map<Integer, Integer> rowIndices = new HashMap<>();
 
     private final Map<String, Consumer<MergeableDataObjectEntry>> parsers = Map.of(
             TABLE_ROWS_KEY_NAME, this::parseRows,
@@ -110,6 +115,27 @@ public class Table implements EmbeddedObjectData {
 
     private void parseRows(MergeableDataObjectEntry entry) {
         Log.debug("parsing rows...");
+        entry
+                .getOrderedSet()
+                .getOrdering()
+                .getArray()
+                .getAttachmentList()
+                .forEach((a) -> {
+                    rowIndices.put(this.uuids.indexOf(a.getUuid()), this.numRows);
+                    ++this.numRows;
+                });
+
+        entry
+                .getOrderedSet()
+                .getOrdering()
+                .getContents()
+                .getElementList()
+                .forEach((e) -> {
+                    var key = getUuidFromObjectEntry(this.tables.get(e.getKey().getObjectIndex()));
+                    var value = getUuidFromObjectEntry(this.tables.get(e.getValue().getObjectIndex()));
+
+                    rowIndices.put((int) value, rowIndices.get((int) key));
+                });
     }
 
     private void parseColumns(MergeableDataObjectEntry entry) {
@@ -118,5 +144,13 @@ public class Table implements EmbeddedObjectData {
 
     private void parseCellColumns(MergeableDataObjectEntry entry) {
         Log.debug("parsing cell columns...");
+    }
+
+    private long getUuidFromObjectEntry(MergeableDataObjectEntry entry) {
+        return entry
+                .getCustomMap()
+                .getMapEntry(0)
+                .getValue()
+                .getUnsignedIntegerValue();
     }
 }
