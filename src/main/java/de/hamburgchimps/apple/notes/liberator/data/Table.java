@@ -1,9 +1,11 @@
 package de.hamburgchimps.apple.notes.liberator.data;
 
+import com.ciofecaforensics.Notestore.DictionaryElement;
 import com.ciofecaforensics.Notestore.MapEntry;
 import com.ciofecaforensics.Notestore.MergableDataProto;
 import com.ciofecaforensics.Notestore.MergeableDataObjectEntry;
 import com.ciofecaforensics.Notestore.ObjectID;
+import com.ciofecaforensics.Notestore.OrderedSetOrderingArrayAttachment;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ProtocolStringList;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
@@ -15,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_CELL_COLUMNS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_COLUMNS_KEY_NAME;
@@ -33,11 +38,8 @@ public class Table implements EmbeddedObjectData {
     private List<ByteString> uuids;
     private final List<MergeableDataObjectEntry> tables = new ArrayList<>();
     private MergeableDataObjectEntry root;
-
-    private int numRows = 0;
-
     private final Map<Integer, Integer> rowIndices = new HashMap<>();
-
+    private final Map<Integer, Integer> columnIndices = new HashMap<>();
     private final Map<String, Consumer<MergeableDataObjectEntry>> parsers = Map.of(
             TABLE_ROWS_KEY_NAME, this::parseRows,
             TABLE_COLUMNS_KEY_NAME, this::parseColumns,
@@ -116,35 +118,48 @@ public class Table implements EmbeddedObjectData {
     // TODO clean this up
     private void parseRows(MergeableDataObjectEntry entry) {
         Log.debug("parsing rows...");
-        entry
-                .getOrderedSet()
-                .getOrdering()
-                .getArray()
-                .getAttachmentList()
-                .forEach((a) -> {
-                    rowIndices.put(this.uuids.indexOf(a.getUuid()), this.numRows);
-                    ++this.numRows;
-                });
-
-        entry
-                .getOrderedSet()
-                .getOrdering()
-                .getContents()
-                .getElementList()
-                .forEach((e) -> {
-                    var key = getUuidFromObjectEntry(this.tables.get(e.getKey().getObjectIndex()));
-                    var value = getUuidFromObjectEntry(this.tables.get(e.getValue().getObjectIndex()));
-
-                    rowIndices.put((int) value, rowIndices.get((int) key));
-                });
+        initIndices(entry, rowIndices);
+        mapIndices(entry, rowIndices);
     }
 
     private void parseColumns(MergeableDataObjectEntry entry) {
         Log.debug("parsing columns...");
+        initIndices(entry, columnIndices);
+        mapIndices(entry, columnIndices);
     }
 
     private void parseCellColumns(MergeableDataObjectEntry entry) {
         Log.debug("parsing cell columns...");
+    }
+
+    private void initIndices(MergeableDataObjectEntry entry, Map<Integer, Integer> indices) {
+        var attachments = entry
+                .getOrderedSet()
+                .getOrdering()
+                .getArray()
+                .getAttachmentList();
+
+        indices.clear();
+        indices.putAll(IntStream
+                .range(0, attachments.size()).boxed()
+                .collect(Collectors.toMap((i) -> this.uuids.indexOf(attachments.get(i).getUuid()), Function.identity())));
+    }
+
+    private void mapIndices(MergeableDataObjectEntry entry, Map<Integer, Integer> indices) {
+        var elements = entry
+                .getOrderedSet()
+                .getOrdering()
+                .getContents()
+                .getElementList();
+
+
+        elements.forEach((e) -> {
+            var key = getUuidFromObjectEntry(this.tables.get(e.getKey().getObjectIndex()));
+            var value = getUuidFromObjectEntry(this.tables.get(e.getValue().getObjectIndex()));
+
+            indices.put((int) value, indices.get((int) key));
+        });
+
     }
 
     private long getUuidFromObjectEntry(MergeableDataObjectEntry entry) {
