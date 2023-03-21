@@ -1,11 +1,9 @@
 package de.hamburgchimps.apple.notes.liberator.data;
 
-import com.ciofecaforensics.Notestore.DictionaryElement;
 import com.ciofecaforensics.Notestore.MapEntry;
 import com.ciofecaforensics.Notestore.MergableDataProto;
 import com.ciofecaforensics.Notestore.MergeableDataObjectEntry;
 import com.ciofecaforensics.Notestore.ObjectID;
-import com.ciofecaforensics.Notestore.OrderedSetOrderingArrayAttachment;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ProtocolStringList;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
@@ -21,7 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_CELL_COLUMNS_KEY_NAME;
+import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_CELLS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_COLUMNS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_UNKNOWN;
@@ -43,7 +41,7 @@ public class Table implements EmbeddedObjectData {
     private final Map<String, Consumer<MergeableDataObjectEntry>> parsers = Map.of(
             TABLE_ROWS_KEY_NAME, this::parseRows,
             TABLE_COLUMNS_KEY_NAME, this::parseColumns,
-            TABLE_CELL_COLUMNS_KEY_NAME, this::parseCellColumns
+            TABLE_CELLS_KEY_NAME, this::parseCells
     );
     private final List<RuntimeException> errors = new ArrayList<>();
 
@@ -115,7 +113,6 @@ public class Table implements EmbeddedObjectData {
         parser.accept(this.tables.get(entry.getValue().getObjectIndex()));
     }
 
-    // TODO clean this up
     private void parseRows(MergeableDataObjectEntry entry) {
         Log.debug("parsing rows...");
         initIndices(entry, rowIndices);
@@ -128,8 +125,30 @@ public class Table implements EmbeddedObjectData {
         mapIndices(entry, columnIndices);
     }
 
-    private void parseCellColumns(MergeableDataObjectEntry entry) {
-        Log.debug("parsing cell columns...");
+    private void parseCells(MergeableDataObjectEntry entry) {
+        Log.debug("parsing cells...");
+
+        entry
+                .getDictionary()
+                .getElementList()
+                .forEach((column) -> {
+                    var columnUuid = getUuidFromObjectEntry(this.tables.get(column.getKey().getObjectIndex()));
+                    var rows = this.tables.get(column.getValue().getObjectIndex());
+
+                    rows
+                            .getDictionary()
+                            .getElementList()
+                            .forEach((row) -> {
+                                var rowUuid = getUuidFromObjectEntry(this.tables.get(row.getKey().getObjectIndex()));
+                                var cell = this.tables.get(row.getValue().getObjectIndex());
+
+                                // TODO parse cell text
+                                if (cell.getNote().getNoteText().contains("2023")) {
+                                    Log.debug(cell.getNote().getNoteText());
+                                }
+                                // TODO parse table representation
+                            });
+                });
     }
 
     private void initIndices(MergeableDataObjectEntry entry, Map<Integer, Integer> indices) {

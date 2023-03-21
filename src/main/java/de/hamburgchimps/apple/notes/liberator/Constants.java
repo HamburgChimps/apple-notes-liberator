@@ -5,7 +5,7 @@ public class Constants {
     public static final String TABLE_DIRECTION_KEY_NAME = "crTableColumnDirection";
     public static final String TABLE_ROWS_KEY_NAME = "crRows";
     public static final String TABLE_COLUMNS_KEY_NAME = "crColumns";
-    public static final String TABLE_CELL_COLUMNS_KEY_NAME = "cellColumns";
+    public static final String TABLE_CELLS_KEY_NAME = "cellColumns";
     public static final String TABLE_DIRECTION_UNKNOWN = "unknown";
     public static final String TABLE_ROOT_IDENTIFIER = "com.apple.notes.ICTable";
 }
