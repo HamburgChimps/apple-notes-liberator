@@ -38,6 +38,8 @@ public class Table implements EmbeddedObjectData {
     private MergeableDataObjectEntry root;
     private final Map<Integer, Integer> rowIndices = new HashMap<>();
     private final Map<Integer, Integer> columnIndices = new HashMap<>();
+
+    // TODO add members to hold row and column structure
     private final Map<String, Consumer<MergeableDataObjectEntry>> parsers = Map.of(
             TABLE_ROWS_KEY_NAME, this::parseRows,
             TABLE_COLUMNS_KEY_NAME, this::parseColumns,
