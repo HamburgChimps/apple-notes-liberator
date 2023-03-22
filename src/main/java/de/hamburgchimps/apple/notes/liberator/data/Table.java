@@ -11,8 +11,6 @@ import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import io.quarkus.logging.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +18,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_CELLS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_COLUMNS_KEY_NAME;
