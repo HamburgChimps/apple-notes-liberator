@@ -11,6 +11,8 @@ import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import io.quarkus.logging.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_CELLS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_COLUMNS_KEY_NAME;
@@ -156,19 +159,9 @@ public class Table implements EmbeddedObjectData {
                                 var rowIndex = this.rowIndices.get((int) rowUuid);
                                 var columnIndex = this.columnIndices.get((int) columnUuid);
 
-                                if (rowIndex >= this.parsed.size()) {
-                                    this.parsed.add(rowIndex, new ArrayList<>());
-                                }
-
-                                var currentRow = this.parsed.get(rowIndex);
-
-                                if (columnIndex >= currentRow.size()) {
-                                    currentRow.add(columnIndex, null);
-                                }
-
                                 this.parsed
                                         .get(rowIndex)
-                                        .add(columnIndex, cell.getNote().getNoteText());
+                                        .set(columnIndex, cell.getNote().getNoteText());
                             });
                 });
     }
@@ -204,9 +197,15 @@ public class Table implements EmbeddedObjectData {
     }
 
     private void initParsed() {
-        this.parsed = new ArrayList<>(this.rowIndices.size());
+        this.parsed = new ArrayList<>();
 
-        // TODO finish initializing structure to hold parsed data
+        this.rowIndices.forEach((rowIndexKey, rowIndexVal) -> {
+            this.parsed.add(new ArrayList<>());
+            var row = this.parsed.get(this.parsed.size() - 1);
+            this.columnIndices.forEach((columnIndexKey, columnIndexVal) -> {
+                row.add(null);
+            });
+        });
     }
 
     private long getUuidFromObjectEntry(MergeableDataObjectEntry entry) {
