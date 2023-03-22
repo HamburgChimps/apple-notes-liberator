@@ -11,6 +11,7 @@ import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import io.quarkus.logging.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,8 @@ public class Table implements EmbeddedObjectData {
     private MergeableDataObjectEntry root;
     private final Map<Integer, Integer> rowIndices = new HashMap<>();
     private final Map<Integer, Integer> columnIndices = new HashMap<>();
+    private int numRows;
+    private int numColumns;
     private List<List<String>> parsed;
     private final Map<String, Consumer<MergeableDataObjectEntry>> parsers = Map.of(
             TABLE_ROWS_KEY_NAME, this::parseRows,
@@ -92,6 +95,8 @@ public class Table implements EmbeddedObjectData {
         this.root = potentialRoot.get();
 
         this.parse();
+
+        Log.debug(this.parsed);
     }
 
     public String getDirection() {
@@ -125,12 +130,14 @@ public class Table implements EmbeddedObjectData {
     private void parseRows(MergeableDataObjectEntry entry) {
         Log.debug("parsing rows...");
         initIndices(entry, rowIndices);
+        this.numRows = this.rowIndices.size();
         mapIndices(entry, rowIndices);
     }
 
     private void parseColumns(MergeableDataObjectEntry entry) {
         Log.debug("parsing columns...");
         initIndices(entry, columnIndices);
+        this.numColumns = this.columnIndices.size();
         mapIndices(entry, columnIndices);
     }
 
@@ -194,15 +201,9 @@ public class Table implements EmbeddedObjectData {
     }
 
     private void initParsed() {
-        this.parsed = new ArrayList<>();
-
-        this.rowIndices.forEach((rowIndexKey, rowIndexVal) -> {
-            this.parsed.add(new ArrayList<>());
-            var row = this.parsed.get(this.parsed.size() - 1);
-            this.columnIndices.forEach((columnIndexKey, columnIndexVal) -> {
-                row.add(null);
-            });
-        });
+        this.parsed = IntStream.range(0, this.numRows)
+                .mapToObj((i) -> new ArrayList<>(Collections.nCopies(this.numColumns, "")))
+                .collect(Collectors.toList());
     }
 
     private long getUuidFromObjectEntry(MergeableDataObjectEntry entry) {
