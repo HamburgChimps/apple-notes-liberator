@@ -38,8 +38,7 @@ public class Table implements EmbeddedObjectData {
     private MergeableDataObjectEntry root;
     private final Map<Integer, Integer> rowIndices = new HashMap<>();
     private final Map<Integer, Integer> columnIndices = new HashMap<>();
-
-    // TODO add members to hold row and column structure
+    private List<List<String>> parsed;
     private final Map<String, Consumer<MergeableDataObjectEntry>> parsers = Map.of(
             TABLE_ROWS_KEY_NAME, this::parseRows,
             TABLE_COLUMNS_KEY_NAME, this::parseColumns,
@@ -95,6 +94,14 @@ public class Table implements EmbeddedObjectData {
         this.parse();
     }
 
+    public String getDirection() {
+        return direction;
+    }
+
+    public List<List<String>> getParsed() {
+        return parsed;
+    }
+
     private void parse() {
         Log.debug("parsing table...");
         this.root
@@ -130,6 +137,8 @@ public class Table implements EmbeddedObjectData {
     private void parseCells(MergeableDataObjectEntry entry) {
         Log.debug("parsing cells...");
 
+        initParsed();
+
         entry
                 .getDictionary()
                 .getElementList()
@@ -144,11 +153,22 @@ public class Table implements EmbeddedObjectData {
                                 var rowUuid = getUuidFromObjectEntry(this.tables.get(row.getKey().getObjectIndex()));
                                 var cell = this.tables.get(row.getValue().getObjectIndex());
 
-                                // TODO parse cell text
-                                if (cell.getNote().getNoteText().contains("2023")) {
-                                    Log.debug(cell.getNote().getNoteText());
+                                var rowIndex = this.rowIndices.get((int) rowUuid);
+                                var columnIndex = this.columnIndices.get((int) columnUuid);
+
+                                if (rowIndex >= this.parsed.size()) {
+                                    this.parsed.add(rowIndex, new ArrayList<>());
                                 }
-                                // TODO parse table representation
+
+                                var currentRow = this.parsed.get(rowIndex);
+
+                                if (columnIndex >= currentRow.size()) {
+                                    currentRow.add(columnIndex, null);
+                                }
+
+                                this.parsed
+                                        .get(rowIndex)
+                                        .add(columnIndex, cell.getNote().getNoteText());
                             });
                 });
     }
@@ -181,6 +201,12 @@ public class Table implements EmbeddedObjectData {
             indices.put((int) value, indices.get((int) key));
         });
 
+    }
+
+    private void initParsed() {
+        this.parsed = new ArrayList<>(this.rowIndices.size());
+
+        // TODO finish initializing structure to hold parsed data
     }
 
     private long getUuidFromObjectEntry(MergeableDataObjectEntry entry) {
