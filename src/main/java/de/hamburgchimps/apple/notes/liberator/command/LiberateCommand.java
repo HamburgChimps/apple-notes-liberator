@@ -46,6 +46,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
                 .map(NoteData::new)
                 .toList();
 
+        // TODO add some information to readme
         // TODO release v0.1.0?
         // TODO provide some sort of html or csv mapping?
         Log.infov("Parsed {0} notes.", parsedNotes.size());
