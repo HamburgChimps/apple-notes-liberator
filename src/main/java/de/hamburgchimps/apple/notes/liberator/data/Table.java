@@ -95,8 +95,6 @@ public class Table implements EmbeddedObjectData {
         this.root = potentialRoot.get();
 
         this.parse();
-
-        Log.debug(this.parsed);
     }
 
     public String getDirection() {
@@ -108,7 +106,6 @@ public class Table implements EmbeddedObjectData {
     }
 
     private void parse() {
-        Log.debug("parsing table...");
         this.root
                 .getCustomMap()
                 .getMapEntryList()
@@ -128,22 +125,18 @@ public class Table implements EmbeddedObjectData {
     }
 
     private void parseRows(MergeableDataObjectEntry entry) {
-        Log.debug("parsing rows...");
         initIndices(entry, rowIndices);
         this.numRows = this.rowIndices.size();
         mapIndices(entry, rowIndices);
     }
 
     private void parseColumns(MergeableDataObjectEntry entry) {
-        Log.debug("parsing columns...");
         initIndices(entry, columnIndices);
         this.numColumns = this.columnIndices.size();
         mapIndices(entry, columnIndices);
     }
 
     private void parseCells(MergeableDataObjectEntry entry) {
-        Log.debug("parsing cells...");
-
         initParsed();
 
         entry
