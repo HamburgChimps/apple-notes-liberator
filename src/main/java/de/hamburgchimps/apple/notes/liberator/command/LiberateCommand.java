@@ -11,6 +11,7 @@ import io.quarkus.logging.Log;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import picocli.CommandLine;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
 
 import javax.enterprise.context.control.ActivateRequestContext;
@@ -25,9 +26,9 @@ import java.util.List;
 @Command
 @SuppressWarnings("unused")
 public class LiberateCommand implements Runnable, QuarkusApplication {
+    @Option(names = {"-f", "--file"}, description = "Path to Apple Notes sqlite file")
+    private String filePath;
     private final CommandLine.IFactory factory;
-
-
     private final AgroalDataSource dataSource;
 
     public LiberateCommand(CommandLine.IFactory factory, AgroalDataSource dataSource) {
@@ -60,10 +61,13 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     }
 
     private void copyNotesDb() {
-        // TODO allow specifying path to file
-        var noteStoreDb = new File(Constants.NOTE_STORE_PATH);
+        if (this.filePath == null) {
+            this.filePath = Constants.NOTE_STORE_PATH;
+        }
+        var noteStoreDb = new File(filePath);
 
         if (!noteStoreDb.exists()) {
+            // TODO modify message here
             throw new RuntimeException(UserMessages.CANT_AUTOMATICALLY_FIND_NOTES_DATABASE);
         }
 
