@@ -54,6 +54,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     }
 
     @Override
+    // TODO make quarkus logging less verbose
     public int run(String... args) {
         return new CommandLine(this, factory)
                 .setExecutionExceptionHandler(new ExceptionHandler())
