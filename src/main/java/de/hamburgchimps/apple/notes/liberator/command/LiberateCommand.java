@@ -71,7 +71,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
 
     private void copyNotesDb() {
         if (this.noteStoreDb != null && !this.noteStoreDb.exists()) {
-            throw new RuntimeException(String.format(UserMessages.NOTES_DATABASE_DOES_NOT_EXIST_AT_SPECIFIED_PATH, this.noteStoreDb.toPath()));
+            throw new RuntimeException(String.format(UserMessages.NOTES_DATABASE_DOES_NOT_EXIST_AT_SPECIFIED_PATH, this.noteStoreDb.getPath()));
         }
 
         this.noteStoreDb = new File(Constants.NOTE_STORE_PATH);
@@ -85,7 +85,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
                     Path.of(Constants.COPIED_NOTE_STORE_PATH),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException(UserMessages.CANT_COPY_NOTES_DATABASE);
+            throw new RuntimeException(String.format(UserMessages.CANT_COPY_NOTES_DATABASE, this.noteStoreDb.getPath()));
         }
     }
 
