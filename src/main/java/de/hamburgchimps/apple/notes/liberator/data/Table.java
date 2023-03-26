@@ -30,6 +30,10 @@ import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ER
 import static de.hamburgchimps.apple.notes.liberator.data.TableDirection.DIRECTION_IDENTIFIER_TO_DIRECTION;
 import static de.hamburgchimps.apple.notes.liberator.data.TableDirection.UNKNOWN;
 
+// The only reason I was able to parse an Apple Notes table is because someone else did it first.
+// Check out their work:
+// https://github.com/threeplanetssoftware/apple_cloud_notes_parser/blob/master/lib/AppleNotesEmbeddedTable.rb
+// This implementation is basically a 1-to-1 translation of their parsing code into java.
 public class Table implements EmbeddedObjectData {
 
     private TableDirection direction;

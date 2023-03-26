@@ -1,3 +1,5 @@
+// Note: these are directly copied from https://github.com/threeplanetssoftware/apple_cloud_notes_parser/blob/master/proto/notestore.proto
+// Their work is amazing. Without these I would be absolutely lost.
 syntax = "proto2";
 package com.ciofecaforensics;
 //
