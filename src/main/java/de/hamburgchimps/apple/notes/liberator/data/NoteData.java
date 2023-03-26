@@ -4,6 +4,7 @@ import com.ciofecaforensics.Notestore;
 import com.ciofecaforensics.Notestore.NoteStoreProto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
+import de.hamburgchimps.apple.notes.liberator.UserMessages;
 import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 
@@ -82,7 +83,7 @@ public class NoteData {
         var typeIdentifier = embeddedObject.zTypeUti;
 
         if (typeIdentifier.isEmpty()) {
-            this.errors.add(new RuntimeException(String.format("Cannot parse embedded object with identifier \"%s\": no type identifier present", attachmentInfo.getAttachmentIdentifier())));
+            this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_NO_TYPE_IDENTIFIER, attachmentInfo.getAttachmentIdentifier())));
             return Optional.empty();
         }
 
@@ -90,7 +91,7 @@ public class NoteData {
                 .byIdentifier(typeIdentifier);
 
         if (type == null) {
-            this.errors.add(new RuntimeException(String.format("Parsing for embedded objects of type \"%s\" is not yet supported", embeddedObject.zTypeUti)));
+            this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_TYPE_NOT_YET_SUPPORTED, embeddedObject.zTypeUti)));
             return Optional.empty();
         }
 
