@@ -152,14 +152,14 @@ public class Table implements EmbeddedObjectData {
                 .getDictionary()
                 .getElementList()
                 .forEach((column) -> {
-                    var columnUuid = getUuidFromObjectEntry(this.tables.get(column.getKey().getObjectIndex()));
+                    var columnUuid = ProtoUtils.getUuidFromObjectEntry(this.tables.get(column.getKey().getObjectIndex()));
                     var rows = this.tables.get(column.getValue().getObjectIndex());
 
                     rows
                             .getDictionary()
                             .getElementList()
                             .forEach((row) -> {
-                                var rowUuid = getUuidFromObjectEntry(this.tables.get(row.getKey().getObjectIndex()));
+                                var rowUuid = ProtoUtils.getUuidFromObjectEntry(this.tables.get(row.getKey().getObjectIndex()));
                                 var cell = this.tables.get(row.getValue().getObjectIndex());
 
                                 var rowIndex = this.rowIndices.get((int) rowUuid);
@@ -202,8 +202,8 @@ public class Table implements EmbeddedObjectData {
 
 
         elements.forEach((e) -> {
-            var key = getUuidFromObjectEntry(this.tables.get(e.getKey().getObjectIndex()));
-            var value = getUuidFromObjectEntry(this.tables.get(e.getValue().getObjectIndex()));
+            var key = ProtoUtils.getUuidFromObjectEntry(this.tables.get(e.getKey().getObjectIndex()));
+            var value = ProtoUtils.getUuidFromObjectEntry(this.tables.get(e.getValue().getObjectIndex()));
 
             indices.put((int) value, indices.get((int) key));
         });
@@ -214,13 +214,5 @@ public class Table implements EmbeddedObjectData {
         this.data = IntStream.range(0, this.numRows)
                 .mapToObj((i) -> new ArrayList<>(Collections.nCopies(this.numColumns, "")))
                 .collect(Collectors.toList());
-    }
-
-    private long getUuidFromObjectEntry(MergeableDataObjectEntry entry) {
-        return entry
-                .getCustomMap()
-                .getMapEntry(0)
-                .getValue()
-                .getUnsignedIntegerValue();
     }
 }

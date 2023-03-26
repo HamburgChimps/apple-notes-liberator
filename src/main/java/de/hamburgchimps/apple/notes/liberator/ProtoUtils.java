@@ -1,7 +1,8 @@
 package de.hamburgchimps.apple.notes.liberator;
 
-import com.ciofecaforensics.Notestore.MergeableDataObjectMap;
 import com.ciofecaforensics.Notestore.MapEntry;
+import com.ciofecaforensics.Notestore.MergeableDataObjectEntry;
+import com.ciofecaforensics.Notestore.MergeableDataObjectMap;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.Parser;
 
@@ -29,5 +30,13 @@ public class ProtoUtils {
 
     public static MapEntry getFirstMapEntry(MergeableDataObjectMap customMap) {
         return customMap.getMapEntry(0);
+    }
+
+    public static long getUuidFromObjectEntry(MergeableDataObjectEntry entry) {
+        return entry
+                .getCustomMap()
+                .getMapEntry(0)
+                .getValue()
+                .getUnsignedIntegerValue();
     }
 }
