@@ -74,9 +74,9 @@ Then the `data` field would contain the following two-dimensional array:
 ```
 
 [0]: https://github.com/HamburgChimps/apple-notes-liberator/issues
-[1]: https://github.com/HamburgChimps/apple-notes-liberator/blob/main/src/main/proto/notestore.proto
-[2]: https://github.com/HamburgChimps/apple-notes-liberator/pulls
-[3]: https://github.com/threeplanetssoftware/apple_cloud_notes_parser
+[1]: https://github.com/HamburgChimps/apple-notes-liberator/pulls
+[2]: https://github.com/threeplanetssoftware/apple_cloud_notes_parser
+[3]: https://github.com/HamburgChimps/apple-notes-liberator/blob/main/src/main/proto/notestore.proto
 [4]: https://www.ciofecaforensics.com/categories/#Apple%20Notes
 [5]: https://github.com/hamburgchimps/apple-notes-liberator/releases
 [6]: #embedded-object-data-representation
