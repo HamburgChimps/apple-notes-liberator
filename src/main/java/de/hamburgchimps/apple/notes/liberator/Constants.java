@@ -6,6 +6,7 @@ public class Constants {
     public static final String TABLE_ROWS_KEY_NAME = "crRows";
     public static final String TABLE_COLUMNS_KEY_NAME = "crColumns";
     public static final String TABLE_CELLS_KEY_NAME = "cellColumns";
-    public static final String TABLE_DIRECTION_UNKNOWN = "unknown";
     public static final String TABLE_ROOT_IDENTIFIER = "com.apple.notes.ICTable";
+    public static final String COPIED_NOTE_STORE_PATH = "notes.sqlite";
+    public static final String NOTES_JSON_PATH = "notes.json";
 }

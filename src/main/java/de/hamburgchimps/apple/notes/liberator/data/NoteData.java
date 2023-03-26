@@ -2,6 +2,7 @@ package de.hamburgchimps.apple.notes.liberator.data;
 
 import com.ciofecaforensics.Notestore;
 import com.ciofecaforensics.Notestore.NoteStoreProto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
 import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
@@ -41,7 +42,7 @@ public class NoteData {
     public List<EmbeddedObjectData> getEmbeddedObjects() {
         return embeddedObjects;
     }
-
+    @JsonIgnore
     public List<RuntimeException> getErrors() {
         return errors;
     }

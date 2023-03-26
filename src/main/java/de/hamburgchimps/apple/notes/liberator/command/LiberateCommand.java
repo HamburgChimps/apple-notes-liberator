@@ -1,5 +1,7 @@
 package de.hamburgchimps.apple.notes.liberator.command;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hubspot.jackson.datatype.protobuf.ProtobufModule;
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ExceptionHandler;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
@@ -11,8 +13,8 @@ import io.quarkus.logging.Log;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 import picocli.CommandLine;
-import picocli.CommandLine.Option;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
 import javax.enterprise.context.control.ActivateRequestContext;
 import java.io.File;
@@ -23,38 +25,44 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @QuarkusMain
-@Command
+@Command(version = "0.1.0", description = "Liberate your data from Apple Notes.", mixinStandardHelpOptions = true)
 @SuppressWarnings("unused")
 public class LiberateCommand implements Runnable, QuarkusApplication {
     @Option(names = {"-f", "--file"}, description = "Path to Apple Notes sqlite file")
-    private String filePath;
+    private File noteStoreDb;
     private final CommandLine.IFactory factory;
     private final AgroalDataSource dataSource;
+    private final ObjectMapper objectMapper;
 
     public LiberateCommand(CommandLine.IFactory factory, AgroalDataSource dataSource) {
         this.factory = factory;
         this.dataSource = dataSource;
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new ProtobufModule());
     }
 
     @Override
     @ActivateRequestContext
     public void run() {
         dataSource.flush(FlushMode.IDLE);
-        copyNotesDb();
+
+        this.copyNotesDb();
 
         var parsedNotes = getAllNotes()
                 .stream()
                 .map(NoteData::new)
                 .toList();
 
-        // TODO add some information to readme
-        // TODO release v0.1.0?
-        // TODO provide some sort of html or csv mapping?
         Log.infov("Parsed {0} notes.", parsedNotes.size());
+
+        try {
+            Files.write(Path.of(Constants.NOTES_JSON_PATH), objectMapper.writeValueAsString(parsedNotes).getBytes());
+        } catch (IOException e) {
+            Log.error(e);
+        }
     }
 
     @Override
-    // TODO make quarkus logging less verbose
     public int run(String... args) {
         return new CommandLine(this, factory)
                 .setExecutionExceptionHandler(new ExceptionHandler())
@@ -62,19 +70,19 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     }
 
     private void copyNotesDb() {
-        if (this.filePath == null) {
-            this.filePath = Constants.NOTE_STORE_PATH;
+        if (this.noteStoreDb != null && !this.noteStoreDb.exists()) {
+            throw new RuntimeException(String.format(UserMessages.NOTES_DATABASE_DOES_NOT_EXIST_AT_SPECIFIED_PATH, this.noteStoreDb.toPath()));
         }
-        var noteStoreDb = new File(filePath);
 
-        if (!noteStoreDb.exists()) {
-            // TODO modify message here
+        this.noteStoreDb = new File(Constants.NOTE_STORE_PATH);
+
+        if (!this.noteStoreDb.exists()) {
             throw new RuntimeException(UserMessages.CANT_AUTOMATICALLY_FIND_NOTES_DATABASE);
         }
 
         try {
-            Files.copy(Path.of(Constants.NOTE_STORE_PATH),
-                    Path.of("notes.sqlite"),
+            Files.copy(this.noteStoreDb.toPath(),
+                    Path.of(Constants.COPIED_NOTE_STORE_PATH),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(UserMessages.CANT_COPY_NOTES_DATABASE);

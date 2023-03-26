@@ -23,15 +23,16 @@ import java.util.stream.IntStream;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_CELLS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_COLUMNS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_KEY_NAME;
-import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_UNKNOWN;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROOT_IDENTIFIER;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROWS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_FIND_ROOT;
 import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_PARSE_PROTO;
+import static de.hamburgchimps.apple.notes.liberator.data.TableDirection.DIRECTION_IDENTIFIER_TO_DIRECTION;
+import static de.hamburgchimps.apple.notes.liberator.data.TableDirection.UNKNOWN;
 
 public class Table implements EmbeddedObjectData {
 
-    private String direction;
+    private TableDirection direction;
     private ProtocolStringList keys;
     private ProtocolStringList types;
     private List<ByteString> uuids;
@@ -41,7 +42,8 @@ public class Table implements EmbeddedObjectData {
     private final Map<Integer, Integer> columnIndices = new HashMap<>();
     private int numRows;
     private int numColumns;
-    private List<List<String>> parsed;
+    private List<List<String>> data;
+    private final EmbeddedObjectDataType type = EmbeddedObjectDataType.TABLE;
     private final Map<String, Consumer<MergeableDataObjectEntry>> parsers = Map.of(
             TABLE_ROWS_KEY_NAME, this::parseRows,
             TABLE_COLUMNS_KEY_NAME, this::parseColumns,
@@ -78,8 +80,9 @@ public class Table implements EmbeddedObjectData {
                 .filter((entry) -> entry.getKey() == keys.indexOf(TABLE_DIRECTION_KEY_NAME) + 1)
                 .map(MapEntry::getValue)
                 .map(ObjectID::getStringValue)
+                .map(DIRECTION_IDENTIFIER_TO_DIRECTION::get)
                 .findFirst()
-                .orElse(TABLE_DIRECTION_UNKNOWN);
+                .orElse(UNKNOWN);
 
         var potentialRoot = this.tables
                 .stream()
@@ -95,14 +98,16 @@ public class Table implements EmbeddedObjectData {
         this.root = potentialRoot.get();
 
         this.parse();
+
+        this.reverseRowsIfNeeded();
     }
 
-    public String getDirection() {
-        return direction;
+    public List<List<String>> getData() {
+        return data;
     }
 
-    public List<List<String>> getParsed() {
-        return parsed;
+    public EmbeddedObjectDataType getType() {
+        return type;
     }
 
     private void parse() {
@@ -156,11 +161,19 @@ public class Table implements EmbeddedObjectData {
                                 var rowIndex = this.rowIndices.get((int) rowUuid);
                                 var columnIndex = this.columnIndices.get((int) columnUuid);
 
-                                this.parsed
+                                this.data
                                         .get(rowIndex)
                                         .set(columnIndex, cell.getNote().getNoteText());
                             });
                 });
+    }
+
+    // TODO improve and better understand direction handling
+    private void reverseRowsIfNeeded() {
+        if (this.direction == TableDirection.RIGHT_TO_LEFT) {
+            Log.debug("reversing table");
+            this.data.forEach(Collections::reverse);
+        }
     }
 
     private void initIndices(MergeableDataObjectEntry entry, Map<Integer, Integer> indices) {
@@ -194,7 +207,7 @@ public class Table implements EmbeddedObjectData {
     }
 
     private void initParsed() {
-        this.parsed = IntStream.range(0, this.numRows)
+        this.data = IntStream.range(0, this.numRows)
                 .mapToObj((i) -> new ArrayList<>(Collections.nCopies(this.numColumns, "")))
                 .collect(Collectors.toList());
     }
