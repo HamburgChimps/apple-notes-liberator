@@ -1,12 +1,12 @@
 # Apple Notes Liberator
 
-Liberate your Apple Notes from Notes.app. Currently only extracts Note text and tables, but support for extracting more types of data is planned.
+Liberate your Apple Notes data from Notes.app. Currently only extracts Note text and tables, but support for extracting more types of data is planned.
 
 > Note: Currently this project is in early development. Bugs are sure to be lurking. Please open an issue or a pull request should you encounter one! Also feel free to do the same if you would like to request a feature.
 
 ## Credit where credit is due
 
-This project would absolutely not be possible without the incredibly difficult and amazing work by [threeplanetssoftware](https://github.com/threeplanetssoftware/apple_cloud_notes_parser). Their code, along with [their blog posts regarding Apple Notes][0], were invaluable. There's no way I would have been able to figure out any of the Apple Notes structure without it. Furthermore, their tool supports much more than mine! So if you want a more feature-rich Notes extractor, use theirs.
+This project would absolutely not be possible without the incredibly difficult and amazing work by [threeplanetssoftware][0]. Their code, along with [their blog posts regarding Apple Notes][1], were invaluable. There's no way I would have been able to figure out any of the Apple Notes structure without it. Furthermore, their tool supports much more than mine! So if you want a more feature-rich Notes extractor, use theirs.
 
 ## Motivations
 
@@ -17,7 +17,7 @@ This project would absolutely not be possible without the incredibly difficult a
 
 This is a java command line application, and therefore you will need to have Java installed on your system such that you can run `java -version` from your terminal of choice.
 
-Afer ensuring you have a JRE on your system, download a release jar from the [releases][1] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
+Afer ensuring you have a JRE on your system, download a release jar from the [releases][2] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
 
 This application will attempt to locate the notes database on your computer, copy it, and parse what it can. If the application cannot locate your notes database, it will print an error to the terminal and exit. In that case, you can specify the `-f` or `--file` option, passing the path to the notes database you want the application to extract data from. 
 
@@ -44,7 +44,7 @@ Each item in the `embeddedObjects` list will contain at minimun the following fi
 | Field Name | Description |
 | ---  | --- |
 | `type`       | The type of embedded object. Currently, only embedded tables are extracted so this field will always contain the value `TABLE`. As support for extraction of more embedded object types is added, this field will indicate their type. |
-| `data` | [Embedded object data representation][2] |
+| `data` | [Embedded object data representation][3] |
 
 ## Embedded object data representation
 
@@ -72,7 +72,7 @@ Then the `data` field would contain the following two-dimensional array:
   [ 'Cat', '10' ]
 ]
 ```
-
-[0]: https://www.ciofecaforensics.com/categories/#Apple%20Notes
-[1]: https://github.com/hamburgchimps/apple-notes-liberator/releases
-[2]: #embedded-object-data-representation
+[0]: https://github.com/threeplanetssoftware/apple_cloud_notes_parser
+[1]: https://www.ciofecaforensics.com/categories/#Apple%20Notes
+[2]: https://github.com/hamburgchimps/apple-notes-liberator/releases
+[3]: #embedded-object-data-representation
