@@ -95,6 +95,9 @@
               <goal>run</goal>
             </goals>
             <configuration>
+              <!-- Use a newer version of protobuf to allow building on Apple Silicon.
+                   See https://github.com/os72/protoc-jar/issues/93#issuecomment-1142635897 -->
+	          <protocArtifact>com.google.protobuf:protoc:3.21.1</protocArtifact>
               <inputDirectories>
                 <include>src/main/proto</include>
               </inputDirectories>
