@@ -82,7 +82,7 @@ public class NoteData {
 
         var typeIdentifier = embeddedObject.zTypeUti;
 
-        if (typeIdentifier.isEmpty()) {
+        if (typeIdentifier == null || typeIdentifier.isEmpty()) {
             this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_NO_TYPE_IDENTIFIER, attachmentInfo.getAttachmentIdentifier())));
             return Optional.empty();
         }
