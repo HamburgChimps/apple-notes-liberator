@@ -13,11 +13,10 @@ public class ByteUtils {
     }
 
     public static byte[] decompress(byte[] data) throws IOException {
-        var inputBytes = new ByteArrayInputStream(data);
-        var gZipInput = new GZIPInputStream(inputBytes);
-        var outputBytes = new ByteArrayOutputStream();
-        gZipInput.transferTo(outputBytes);
-
-        return outputBytes.toByteArray();
+        try (var gZipInput = new GZIPInputStream(new ByteArrayInputStream(data));
+             var outputBytes = new ByteArrayOutputStream()) {
+            gZipInput.transferTo(outputBytes);
+            return outputBytes.toByteArray();
+        }
     }
 }
