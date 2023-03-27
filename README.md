@@ -6,7 +6,7 @@ Free your Apple Notes data from Notes.app. Currently only extracts Note text and
 
 ## Credit where credit is due
 
-This project would absolutely not be possible without the incredibly difficult and amazing work by [threeplanetssoftware][2]. Their code, [their protobuf definitions][3], and their [their blog posts regarding Apple Notes][4], were invaluable. There's no way I would have been able to figure out any of the Apple Notes structure without it. Furthermore, their tool supports much more than mine! So if you want a more feature-rich Notes extractor, use theirs.
+This project would absolutely not be possible without the incredibly difficult and amazing work by [threeplanetssoftware][2]. Their code, [their protobuf definitions][3], and [their blog posts regarding Apple Notes][4], were invaluable. There's no way I would have been able to figure out any of the Apple Notes structure without it. Furthermore, their tool supports much more than mine! So if you want a more feature-rich Notes extractor, use theirs.
 
 ## Motivations
 
