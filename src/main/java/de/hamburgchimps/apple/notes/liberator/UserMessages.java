@@ -7,5 +7,5 @@ public class UserMessages {
     public static final String EMBEDDED_OBJECT_PARSE_ERROR_NO_TYPE_IDENTIFIER = "Cannot parse embedded object with identifier \"%s\": no type identifier present";
     public static final String EMBEDDED_OBJECT_PARSE_ERROR_TYPE_NOT_YET_SUPPORTED = "Parsing for embedded objects of type \"%s\" is not yet supported";
     public static final String TABLE_PARSE_ERROR_CANT_FIND_ROOT = "Failed to parse table: unable to find root table";
-    public static final String TABLE_PARSE_ERROR_CANT_PARSE_PROTO = "Failed to parse table: see stacktrace starting on next line for more information";
+    public static final String TABLE_PARSE_ERROR_CANT_PARSE_PROTO = "Failed to parse table";
 }

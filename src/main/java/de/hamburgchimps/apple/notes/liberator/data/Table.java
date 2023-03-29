@@ -59,8 +59,7 @@ public class Table implements EmbeddedObjectData {
         var result = ProtoUtils.parseProtoUsingParserFromBytes(MergableDataProto.parser(), embeddedObject.zMergeableData);
 
         if (result.isError()) {
-            Log.error(TABLE_PARSE_ERROR_CANT_PARSE_PROTO);
-            result.error().printStackTrace();
+            Log.error(TABLE_PARSE_ERROR_CANT_PARSE_PROTO, result.error());
             this.errors.add(result.error());
             return;
         }
