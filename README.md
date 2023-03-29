@@ -25,7 +25,7 @@ If the program exits with no output to the terminal, then everything should have
 
 If you get the following error and using external program like ITerm, check the permission to access folder in the program. You can add a "full disk access" in Mac settings to update permissions.
 
-**This applicaiton does NOT perform any sort of read or modification operation on your actual notes database, rather it makes a copy of it and reads from its copy.**
+**This application does NOT perform any sort of read or modification operation on your actual notes database, rather it makes a copy of it and reads from its copy.**
 
 ## Sandbox Permissions
 
