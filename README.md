@@ -27,6 +27,20 @@ If you get the following error and using external program like ITerm, check the 
 
 **This applicaiton does NOT perform any sort of read or modification operation on your actual notes database, rather it makes a copy of it and reads from its copy.**
 
+## Sandbox Permissions
+
+In MacOS 10.13 and later the storage location for the notes database is protected by Apple's security sandbox.  If you are using a third party terminal  such as iTerm, you may receive an error like this when running this application:
+
+```
+Cannot copy notes database, do you have read and execute permissions for /Users/xxx/Library/Group Containers/group.com.apple.notes/notestore.sqlite?
+```
+
+To allow access you will need to grant Full Disk Access to your terminal app by opening Control Panel->Privacy and Security->Full Disk Access and enabling the option for you terminal app.
+
+<img width="701" alt="image" src="https://user-images.githubusercontent.com/3091714/228573691-60ce13cf-d5f1-46a1-a740-ef2f14786916.png">
+
+
+
 ## Output format
 
 Currently, the only supported output format is json, though support for html and csv is planned.
