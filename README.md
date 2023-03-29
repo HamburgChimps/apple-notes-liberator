@@ -1,6 +1,6 @@
 # Apple Notes Liberator
 
-Free your Apple Notes data from Notes.app. Currently only extracts Note text and tables, but support for extracting more types of data is planned.
+Free your Apple Notes data from Notes.app. Currently only extracts Note titles, text, and tables, but support for extracting more data is planned.
 
 > Note: This project is in early development. Bugs are sure to be lurking. Please [open an issue][0] or a [pull request][1] should you encounter one! Also feel free to do the same if you would like to request a feature.
 
