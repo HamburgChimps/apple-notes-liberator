@@ -35,6 +35,16 @@ To grant "Full Disk Access" to your terminal app, open up the Control Panel->Pri
 
 **This application does NOT perform any sort of read or modification operation on your actual notes database, rather it makes a copy of it and reads from its copy.**
 
+### Enable Logging
+
+If something isn't working, it might help to see what the application is doing. You can do so by passing `quarkus.profile=debug` as a JVM argument:
+
+```bash
+java -Dquarkus.profile=debug -jar apple-notes-liberator.jar
+```
+
+This will result in a log file named `apple-notes-liberator.log` being generated in the directory where you executed the command.
+
 ## Output format
 
 Currently, the only supported output format is json, though support for html and csv is planned.
