@@ -17,7 +17,7 @@ This project would absolutely not be possible without the incredibly difficult a
 
 This is a java command line application, and therefore you will need to have Java installed on your system such that you can run `java -version` from your terminal of choice.
 
-Afer ensuring you have a JRE on your system, download a release jar from the [releases][5] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
+After ensuring you have a JRE on your system, download a release jar from the [releases][5] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
 
 This application will attempt to locate the notes database on your computer, copy it, and parse what it can. If the application cannot locate your notes database, it will print an error to the terminal and exit. In that case, you can specify the `-f` or `--file` option, passing the path to the notes database you want the application to extract data from. 
 
@@ -29,7 +29,7 @@ If you get the following error and using external program like ITerm, check the 
 
 ## Sandbox Permissions
 
-In MacOS 10.13 and later the storage location for the notes database is protected by Apple's security sandbox.  If you are using a third party terminal  such as iTerm, you may receive an error like this when running this application:
+In MacOS 10.13 and later the storage location for the notes database is protected by Apple's security sandbox. If you are using a third party terminal such as iTerm, you may receive an error like this when running this application:
 
 ```
 Cannot copy notes database, do you have read and execute permissions for /Users/xxx/Library/Group Containers/group.com.apple.notes/notestore.sqlite?
