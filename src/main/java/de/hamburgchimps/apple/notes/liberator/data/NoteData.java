@@ -5,7 +5,7 @@ import com.ciofecaforensics.Notestore.NoteStoreProto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
-import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
+import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 
 import java.util.ArrayList;
@@ -14,13 +14,10 @@ import java.util.Optional;
 
 public class NoteData {
     private final Note note;
-
+    private String title;
     private String text;
-
     private List<EmbeddedObjectData> embeddedObjects;
-
     private NoteStoreProto proto;
-
     private final List<RuntimeException> errors = new ArrayList<>();
 
     public NoteData(Note n) {
@@ -32,8 +29,15 @@ public class NoteData {
             return;
         }
 
-        this.parseText();
+        NotesCloudObject noteObject = NotesCloudObject.findById(this.note.zNote);
+        this.title = noteObject.zTitle1;
+
+        this.text = this.getProtoNote().getNoteText();
         this.parseEmbeddedObjects();
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getText() {
@@ -59,10 +63,6 @@ public class NoteData {
         this.proto = parseResult.get();
     }
 
-    private void parseText() {
-        this.text = this.getProtoNote().getNoteText();
-    }
-
     private void parseEmbeddedObjects() {
         this.embeddedObjects = this.getProtoNote()
                 .getAttributeRunList()
@@ -76,11 +76,11 @@ public class NoteData {
     }
 
     private Optional<EmbeddedObjectData> parseEmbeddedObject(Notestore.AttachmentInfo attachmentInfo) {
-        EmbeddedObject embeddedObject = EmbeddedObject
+        NotesCloudObject notesCloudObject = NotesCloudObject
                 .find("zIdentifier", attachmentInfo.getAttachmentIdentifier())
                 .firstResult();
 
-        var typeIdentifier = embeddedObject.zTypeUti;
+        var typeIdentifier = notesCloudObject.zTypeUti;
 
         if (typeIdentifier == null || typeIdentifier.isEmpty()) {
             this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_NO_TYPE_IDENTIFIER, attachmentInfo.getAttachmentIdentifier())));
@@ -91,11 +91,11 @@ public class NoteData {
                 .byIdentifier(typeIdentifier);
 
         if (type == null) {
-            this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_TYPE_NOT_YET_SUPPORTED, embeddedObject.zTypeUti)));
+            this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_TYPE_NOT_YET_SUPPORTED, notesCloudObject.zTypeUti)));
             return Optional.empty();
         }
 
-        return Optional.of(type.embeddedObjectDataCreator.apply(embeddedObject));
+        return Optional.of(type.embeddedObjectDataCreator.apply(notesCloudObject));
     }
 
     private Notestore.Note getProtoNote() {

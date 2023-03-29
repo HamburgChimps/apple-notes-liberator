@@ -1,6 +1,6 @@
 package de.hamburgchimps.apple.notes.liberator.data;
 
-import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
+import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,9 +19,9 @@ public enum EmbeddedObjectDataType {
 
     private final String identifier;
 
-    public final Function<EmbeddedObject, ? extends EmbeddedObjectData> embeddedObjectDataCreator;
+    public final Function<NotesCloudObject, ? extends EmbeddedObjectData> embeddedObjectDataCreator;
 
-    EmbeddedObjectDataType(String identifier, Function<EmbeddedObject, ? extends EmbeddedObjectData> embeddedObjectDataCreator) {
+    EmbeddedObjectDataType(String identifier, Function<NotesCloudObject, ? extends EmbeddedObjectData> embeddedObjectDataCreator) {
         this.identifier = identifier;
         this.embeddedObjectDataCreator = embeddedObjectDataCreator;
     }

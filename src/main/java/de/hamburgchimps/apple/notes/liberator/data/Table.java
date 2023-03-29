@@ -7,7 +7,7 @@ import com.ciofecaforensics.Notestore.ObjectID;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ProtocolStringList;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
-import de.hamburgchimps.apple.notes.liberator.entity.EmbeddedObject;
+import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 import io.quarkus.logging.Log;
 
 import java.util.ArrayList;
@@ -55,8 +55,8 @@ public class Table implements EmbeddedObjectData {
     );
     private final List<RuntimeException> errors = new ArrayList<>();
 
-    public Table(EmbeddedObject embeddedObject) {
-        var result = ProtoUtils.parseProtoUsingParserFromBytes(MergableDataProto.parser(), embeddedObject.zMergeableData);
+    public Table(NotesCloudObject notesCloudObject) {
+        var result = ProtoUtils.parseProtoUsingParserFromBytes(MergableDataProto.parser(), notesCloudObject.zMergeableData);
 
         if (result.isError()) {
             Log.error(TABLE_PARSE_ERROR_CANT_PARSE_PROTO, result.error());

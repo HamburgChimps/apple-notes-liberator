@@ -49,13 +49,11 @@ This will result in a log file named `apple-notes-liberator.log` being generated
 
 Currently, the only supported output format is json, though support for html and csv is planned.
 
-The `notes.json` file will contain an array of objects, where each object represents an Apple Note.
-Each object will have a `text` and `embeddedObjects` property. The `text` property will contain the extracted plain text from the note, and the `embedddObjects` property will contain a list of the embedded note objects that were extracted.
-
-Each object in the array represents an extracted Apple Note and will contain the following fields:
+The `notes.json` file will contain an array of objects, where each object represents an Apple Note, and will contain the following fields:
 
 | Field Name | Description |
 | --- | --- |
+| `title` | The title extracted from the note |
 | `text` | The plain text extracted from the note |
 | `embeddedObjects` | A list of the embedded note objects that were extracted from the note |
 
