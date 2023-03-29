@@ -23,23 +23,17 @@ This application will attempt to locate the notes database on your computer, cop
 
 If the program exits with no output to the terminal, then everything should have gone well and you should have a `notes.json` file in the same directory from which you executed the program.
 
-If you get the following error and using external program like ITerm, check the permission to access folder in the program. You can add a "full disk access" in Mac settings to update permissions.
+Note that when using a third-party terminal app, such as iTerm, you may need to enable "Full Disk Access", otherwise the program will probably exit with the following error:
 
-**This application does NOT perform any sort of read or modification operation on your actual notes database, rather it makes a copy of it and reads from its copy.**
+> Cannot copy notes database, do you have read and execute permissions for /Users/xxx/Library/Group Containers/group.com.apple.notes/notestore.sqlite?
 
-## Sandbox Permissions
+This is because in MacOS 10.13 and later, the storage location for the notes database is protected by Apple's security sandbox.
 
-In MacOS 10.13 and later the storage location for the notes database is protected by Apple's security sandbox. If you are using a third party terminal such as iTerm, you may receive an error like this when running this application:
-
-```
-Cannot copy notes database, do you have read and execute permissions for /Users/xxx/Library/Group Containers/group.com.apple.notes/notestore.sqlite?
-```
-
-To allow access you will need to grant Full Disk Access to your terminal app by opening Control Panel->Privacy and Security->Full Disk Access and enabling the option for you terminal app.
+To grant "Full Disk Access" to your terminal app, open up the Control Panel->Privacy and Security->Full Disk Access window and enable it for you terminal app:
 
 <img width="701" alt="image" src="https://user-images.githubusercontent.com/3091714/228573691-60ce13cf-d5f1-46a1-a740-ef2f14786916.png">
 
-
+**This application does NOT perform any sort of read or modification operation on your actual notes database, rather it makes a copy of it and reads from its copy.**
 
 ## Output format
 
@@ -48,7 +42,7 @@ Currently, the only supported output format is json, though support for html and
 The `notes.json` file will contain an array of objects, where each object represents an Apple Note.
 Each object will have a `text` and `embeddedObjects` property. The `text` property will contain the extracted plain text from the note, and the `embedddObjects` property will contain a list of the embedded note objects that were extracted.
 
-Each object in the the array represents an extracted Apple Note and will contain the following fields:
+Each object in the array represents an extracted Apple Note and will contain the following fields:
 
 | Field Name | Description |
 | --- | --- |
