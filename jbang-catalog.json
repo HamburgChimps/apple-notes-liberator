@@ -1,0 +1,10 @@
+{
+  "catalogs": {},
+  "aliases": {
+    "apple-notes-liberator": {
+      "script-ref": "https://github.com/hamburgchimps/apple-notes-liberator/releases/latest/download/apple-notes-liberator.jar",
+      "java-agents": []
+    }
+  },
+  "templates": {}
+}
