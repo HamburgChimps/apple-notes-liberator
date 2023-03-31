@@ -17,7 +17,7 @@ This project would absolutely not be possible without the incredibly difficult a
 
 ### With JBang
 
-Perhaps the most comfortable way to use this application is install it with [JBang][5]. Jbang is a really cool tool that enables easy execution of java applications without having to hassle with downloading jars or compiling yourself first.
+Perhaps the most comfortable way to use this application is install it with [JBang][5]. Jbang is a really cool tool that enables easy execution of java applications without having to hassle with manually downloading jars or compiling yourself first.
 
 For example, if you have JBang installed, you can install `apple-notes-liberator` by executing:
 
@@ -25,7 +25,7 @@ For example, if you have JBang installed, you can install `apple-notes-liberator
 jbang app install apple-notes-liberator@hamburgchimps
 ```
 
-You will be greeted with the following message:
+You will then be greeted with the following message:
 
 ```bash
 [jbang] https://github.com/hamburgchimps/apple-notes-liberator/releases/latest/download/apple-notes-liberator.jar is not from a trusted source thus not running it automatically.
