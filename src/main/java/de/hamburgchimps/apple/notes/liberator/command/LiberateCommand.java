@@ -25,7 +25,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @QuarkusMain
-@Command(version = "0.1.0", description = "Free your data from Apple Notes.", mixinStandardHelpOptions = true)
+@Command(version = "0.1.4", description = "Free your data from Apple Notes.", mixinStandardHelpOptions = true)
 @SuppressWarnings("unused")
 public class LiberateCommand implements Runnable, QuarkusApplication {
     @Option(names = {"-f", "--file"}, description = "Path to Apple Notes sqlite file")
