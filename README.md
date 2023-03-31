@@ -49,7 +49,7 @@ You should then see the following output in your terminal:
 [jbang] Command installed: apple-notes-liberator
 ```
 
-Run `apple-notes-liberator --help` from your terminal. You should see something like the following outputted to your terminal:
+Run `apple-notes-liberator --help` from your terminal. You should see the following output:
 
 ```bash
 Usage: <main class> [-hV] [-f=<noteStoreDb>]
