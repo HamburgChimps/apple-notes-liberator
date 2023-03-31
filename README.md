@@ -15,9 +15,57 @@ This project would absolutely not be possible without the incredibly difficult a
 
 ## Usage
 
-This is a java command line application, and therefore you will need to have Java installed on your system such that you can run `java -version` from your terminal of choice.
+### With JBang
 
-After ensuring you have a JRE on your system, download a release jar from the [releases][5] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
+Perhaps the most comfortable way to use this application is install it with [JBang][5]. Jbang is a really cool tool that enables easy execution of java applications without having to hassle with downloading jars or compiling yourself first.
+
+For example, if you have JBang installed, you can install `apple-notes-liberator` by executing:
+
+```bash
+jbang app install apple-notes-liberator@hamburgchimps
+```
+
+You will be greeted with the following message:
+
+```bash
+[jbang] https://github.com/hamburgchimps/apple-notes-liberator/releases/latest/download/apple-notes-liberator.jar is not from a trusted source thus not running it automatically.
+
+If you trust the url to be safe to run you can do one of the following
+
+(1) Trust once: Add no trust, just download this time (can be run multiple times while cached)
+(2) Trust limited url in future: https://github.com/hamburgchimps/apple-notes-liberator/releases/latest/download/
+(3) Trust organization url in future: https://github.com/hamburgchimps/apple-notes-liberator/releases/latest/
+(0) Cancel
+
+[jbang] Type in your choice and hit enter. Will automatically select option (0) after 30 seconds.
+```
+
+Select option `2`, which will allow you to always execute the latest version of `apple-notes-liberator`.
+
+You should then see the following output in your terminal:
+
+```bash
+[jbang] Adding [https://github.com/hamburgchimps/apple-notes-liberator/releases/latest/download/] to /Users/YOUR_USER/.jbang/trusted-sources.json
+[jbang] Command installed: apple-notes-liberator
+```
+
+Run `apple-notes-liberator --help` from your terminal. You should something like the following outputted to the terminal:
+
+```bash
+Usage: <main class> [-hV] [-f=<noteStoreDb>]
+Free your data from Apple Notes.
+  -f, --file=<noteStoreDb>   Path to Apple Notes sqlite file
+  -h, --help                 Show this help message and exit.
+  -V, --version              Print version information and exit.
+```
+
+Running this application via JBang in this manner has the added benefit that you will always be running the latest version.
+
+### Downloading and executing a release jar
+
+If you don't want to use JBang, then you will need to already have Java installed on your system such that you can run `java -version` from your terminal of choice. Then, download a release jar from the [releases][6] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
+
+## What does this application do?
 
 This application will attempt to locate the notes database on your computer, copy it, and parse what it can. If the application cannot locate your notes database, it will print an error to the terminal and exit. In that case, you can specify the `-f` or `--file` option, passing the path to the notes database you want the application to extract data from. 
 
@@ -37,7 +85,13 @@ To grant "Full Disk Access" to your terminal app, open up the Control Panel->Pri
 
 ### Enable Logging
 
-If something isn't working, it might help to see what the application is doing. You can do so by passing `quarkus.profile=debug` as a JVM argument:
+If something isn't working, it might help to see what the application is doing. You can do so by passing setting the environment variable `QUARKUS_PROFILE=debug` before running the application:
+
+```bash
+QUARKUS_PROFILE=debug apple-notes-liberator
+```
+
+If you didn't install the application with JBang, but instead downloaded a release jar, you can also use a JVM argument:
 
 ```bash
 java -Dquarkus.profile=debug -jar apple-notes-liberator.jar
@@ -62,7 +116,7 @@ Each item in the `embeddedObjects` list will contain at minimun the following fi
 | Field Name | Description |
 | ---  | --- |
 | `type`       | The type of embedded object. Currently, only embedded tables are extracted so this field will always contain the value `TABLE`. As support for extraction of more embedded object types is added, this field will indicate their type. |
-| `data` | [Embedded object data representation][6] |
+| `data` | [Embedded object data representation][7] |
 
 ## Embedded object data representation
 
@@ -96,5 +150,6 @@ Then the `data` field would contain the following two-dimensional array:
 [2]: https://github.com/threeplanetssoftware/apple_cloud_notes_parser
 [3]: https://github.com/HamburgChimps/apple-notes-liberator/blob/main/src/main/proto/notestore.proto
 [4]: https://www.ciofecaforensics.com/categories/#Apple%20Notes
-[5]: https://github.com/hamburgchimps/apple-notes-liberator/releases
-[6]: #embedded-object-data-representation
+[5]: https://www.jbang.dev
+[6]: https://github.com/hamburgchimps/apple-notes-liberator/releases
+[7]: #embedded-object-data-representation
