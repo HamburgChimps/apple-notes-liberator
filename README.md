@@ -19,7 +19,7 @@ This project would absolutely not be possible without the incredibly difficult a
 
 Perhaps the most comfortable way to use this application is install it with [JBang][5]. Jbang is a really cool tool that enables easy execution of java applications without having to hassle with manually downloading jars or compiling yourself first.
 
-For example, if you have JBang installed, you can install `apple-notes-liberator` by executing:
+For example, if you have JBang installed, you can install `apple-notes-liberator` by executing the following command:
 
 ```bash
 jbang app install apple-notes-liberator@hamburgchimps
@@ -58,6 +58,8 @@ Free your data from Apple Notes.
   -h, --help                 Show this help message and exit.
   -V, --version              Print version information and exit.
 ```
+
+You're now ready to use the application!
 
 Running this application via JBang in this manner has the added benefit that you will always be running the latest version.
 
