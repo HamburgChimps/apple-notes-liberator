@@ -5,7 +5,7 @@ on:
       - '*'
 jobs:
   ci:
-    uses: ./.github/workflows/ci.yml@main
+    uses: ./.github/workflows/ci.yml
     with:
       uploadJar: true
   create-release:
