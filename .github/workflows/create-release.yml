@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Create release
     steps:
+      - uses: actions/checkout@v3
       - name: Download Jar
         uses: actions/download-artifact@v3
         with:
           name: jar
           path: apple-notes-liberator.jar
-      - uses: actions/checkout@v3
       - name: Create release
         uses: eloquent/github-release-action@v3
         with:
