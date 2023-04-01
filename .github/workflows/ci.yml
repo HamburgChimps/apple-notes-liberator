@@ -1,6 +1,12 @@
 name: CI
 
-on: [push, pull_request, workflow_call]
+on:
+  push:
+  pull_request:
+  workflow_call:
+    inputs:
+      uploadJar:
+        description: 'Whether or not to upload a release jar to GitHub'
 
 jobs:
   ci:
