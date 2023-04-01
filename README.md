@@ -1,6 +1,6 @@
 # Apple Notes Liberator
 
-Free your Apple Notes data from Notes.app. Currently only extracts Note titles, text, and tables, but support for extracting more data is planned.
+Free your Apple Notes data from Notes.app. Currently extracts Note folders, titles, text, and tables, and support for extracting more data is planned.
 
 > Note: This project is in early development. Bugs are sure to be lurking. Please [open an issue][0] or a [pull request][1] should you encounter one! Also feel free to do the same if you would like to request a feature.
 
@@ -110,6 +110,7 @@ The `notes.json` file will contain an array of objects, where each object repres
 | Field Name | Description |
 | --- | --- |
 | `title` | The title extracted from the note |
+| `folder` | The name of the folder that the note is located in |
 | `text` | The plain text extracted from the note |
 | `embeddedObjects` | A list of the embedded note objects that were extracted from the note |
 
@@ -117,7 +118,7 @@ Each item in the `embeddedObjects` list will contain at minimun the following fi
 
 | Field Name | Description |
 | ---  | --- |
-| `type`       | The type of embedded object. Currently, only embedded tables are extracted so this field will always contain the value `TABLE`. As support for extraction of more embedded object types is added, this field will indicate their type. |
+| `type` | The type of embedded object. Currently, only embedded tables are extracted so this field will always contain the value `TABLE`. As support for extraction of more embedded object types is added, this field will indicate their type. |
 | `data` | [Embedded object data representation][7] |
 
 ## Embedded object data representation

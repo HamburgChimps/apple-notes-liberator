@@ -15,6 +15,7 @@ import java.util.Optional;
 public class NoteData {
     private final Note note;
     private String title;
+    private String folder;
     private String text;
     private List<EmbeddedObjectData> embeddedObjects;
     private NoteStoreProto proto;
@@ -30,8 +31,9 @@ public class NoteData {
         }
 
         NotesCloudObject noteObject = NotesCloudObject.findById(this.note.zNote);
-        this.title = noteObject.zTitle1;
 
+        this.title = noteObject.zTitle1;
+        this.folder = noteObject.zFolder.zTitle2;
         this.text = this.getProtoNote().getNoteText();
         this.parseEmbeddedObjects();
     }
@@ -39,7 +41,9 @@ public class NoteData {
     public String getTitle() {
         return title;
     }
-
+    public String getFolder() {
+        return folder;
+    }
     public String getText() {
         return text;
     }
