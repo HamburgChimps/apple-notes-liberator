@@ -2,10 +2,13 @@ name: Create Release
 on:
   push:
     tags:
-      - "*"
+      - '*'
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
+    steps:
+      - name: Test
+        run: echo "Hi"
   create-release:
     needs: ci
     runs-on: ubuntu-latest
@@ -13,5 +16,5 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Create release
-        uses: eloquent/github-release-action@v3
+      #- name: Create release
+      #  uses: eloquent/github-release-action@v3
