@@ -18,9 +18,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: jar
-          path: apple-notes-liberator.jar
+          path: release
       - name: Create release
         uses: eloquent/github-release-action@v3
         with:
           assets: |
-            - path: apple-notes-liberator.jar
+            - path: release
+              name: apple-notes-liberator.jar
+              label: release jar
