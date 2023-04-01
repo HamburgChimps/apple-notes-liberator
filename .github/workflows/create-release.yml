@@ -5,7 +5,7 @@ on:
       - '*'
 jobs:
   ci:
-    uses: ./.github/workflows/ci.yml
+    uses: ./.github/workflows/ci.yml@main
     with:
       uploadJar: true
   create-release:
@@ -13,7 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     name: Create release
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      #- name: Create release
-      #  uses: eloquent/github-release-action@v3
+      - name: Download Jar
+        uses: actions/download-artifact@v3
+        with:
+          name: jar
+          path: apple-notes-liberator.jar
+      - name: Create release
+        uses: eloquent/github-release-action@v3
+        with:
+          assets:
+            - path: apple-notes-liberator.jar
