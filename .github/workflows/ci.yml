@@ -11,7 +11,7 @@ on:
         description: 'Whether or not to upload a release jar to GitHub'
         type: boolean
 jobs:
-  ci:
+  build and test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
