@@ -1,9 +1,9 @@
 name: Java CI
 
-on: [push]
+on: [push, workflow_call]
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
