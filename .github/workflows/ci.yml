@@ -22,10 +22,10 @@ jobs:
           distribution: 'temurin'
       - name: Build with Maven
         run: mvn --batch-mode verify
-      - name: Upload jar if needed
+      - if: ${{ inputs.uploadJar }}
+        name: Upload jar if needed
         uses: actions/upload-artifact@v3
         with:
           name: jar
           path: target/apple-notes-liberator*.jar
-        if: ${{ inputs.uploadJar }}
 
