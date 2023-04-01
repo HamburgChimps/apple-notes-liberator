@@ -11,7 +11,7 @@ on:
         description: 'Whether or not to upload a release jar to GitHub'
         type: boolean
 jobs:
-  build-and-test:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,7 +20,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build with Maven
+      - name: Build and test
         run: mvn --batch-mode verify
       - name: Upload jar if needed
         if: ${{ inputs.uploadJar }}
