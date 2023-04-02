@@ -4,25 +4,27 @@ import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 public enum EmbeddedObjectDataType {
-    TABLE("com.apple.notes.table", Table::new);
+    TABLE(Table::new, "com.apple.notes.table"),
+    IMAGE(Image::new, "public.png", "public.jpeg");
 
     private static final Map<String, EmbeddedObjectDataType> IDENTIFIER_TO_TYPE = new HashMap<>();
 
     static {
         Arrays.stream(values())
-                .forEach((t) -> IDENTIFIER_TO_TYPE.put(t.identifier, t));
+                .forEach((t) -> t.identifiers.forEach((i) -> IDENTIFIER_TO_TYPE.put(i, t)));
     }
 
-    private final String identifier;
+    private final List<String> identifiers;
 
     public final Function<NotesCloudObject, ? extends EmbeddedObjectData> embeddedObjectDataCreator;
 
-    EmbeddedObjectDataType(String identifier, Function<NotesCloudObject, ? extends EmbeddedObjectData> embeddedObjectDataCreator) {
-        this.identifier = identifier;
+    EmbeddedObjectDataType(Function<NotesCloudObject, ? extends EmbeddedObjectData> embeddedObjectDataCreator, String... identifiers) {
+        this.identifiers = Arrays.asList(identifiers);
         this.embeddedObjectDataCreator = embeddedObjectDataCreator;
     }
 

@@ -109,6 +109,7 @@ public class Table implements EmbeddedObjectData {
         return data;
     }
 
+    @Override
     public EmbeddedObjectDataType getType() {
         return type;
     }
