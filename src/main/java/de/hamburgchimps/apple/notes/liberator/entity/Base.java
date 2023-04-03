@@ -10,11 +10,11 @@ import javax.persistence.MappedSuperclass;
 public class Base extends PanacheEntityBase {
     @Id
     @Column(name = "Z_PK")
-    public int zPk;
+    public Integer zPk;
 
     @Column(name = "Z_ENT")
-    public int zEnt;
+    public Integer zEnt;
 
     @Column(name = "Z_OPT")
-    public int zOpt;
+    public Integer zOpt;
 }

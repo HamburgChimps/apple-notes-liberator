@@ -1,7 +1,9 @@
 package de.hamburgchimps.apple.notes.liberator;
 
 public class Constants {
-    public static final String NOTE_STORE_PATH = String.format("%s/Library/Group Containers/group.com.apple.notes/notestore.sqlite", System.getProperty("user.home"));
+    public static final String NOTE_STORE_CONTAINER_PATH = String.format("%s/library/group containers/group.com.apple.notes", System.getProperty("user.home"));
+    public static final String NOTE_STORE_PATH = String.format("%s/notestore.sqlite", NOTE_STORE_CONTAINER_PATH);
+    public static final String NOTE_STORE_MEDIA_PATH = String.format("%s/media", NOTE_STORE_CONTAINER_PATH);
     public static final String TABLE_DIRECTION_KEY_NAME = "crTableColumnDirection";
     public static final String TABLE_ROWS_KEY_NAME = "crRows";
     public static final String TABLE_COLUMNS_KEY_NAME = "crColumns";
