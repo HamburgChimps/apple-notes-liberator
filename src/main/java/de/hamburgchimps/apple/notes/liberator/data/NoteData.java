@@ -3,10 +3,11 @@ package de.hamburgchimps.apple.notes.liberator.data;
 import com.ciofecaforensics.Notestore;
 import com.ciofecaforensics.Notestore.NoteStoreProto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
-import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
+import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,15 +92,13 @@ public class NoteData {
             return Optional.empty();
         }
 
-        EmbeddedObjectDataType type = EmbeddedObjectDataType
-                .byIdentifier(typeIdentifier);
-
-        if (type == null) {
-            this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_TYPE_NOT_YET_SUPPORTED, notesCloudObject.zTypeUti)));
-            return Optional.empty();
+        // are we dealing with a table?
+        if (typeIdentifier.equals(Constants.TABLE_IDENTIFIER)) {
+            return Optional.of(new Table(notesCloudObject));
         }
 
-        return Optional.of(type.embeddedObjectDataCreator.apply(notesCloudObject));
+        // otherwise assume the embedded object is a file
+        return Optional.of(new File(notesCloudObject));
     }
 
     private Notestore.Note getProtoNote() {

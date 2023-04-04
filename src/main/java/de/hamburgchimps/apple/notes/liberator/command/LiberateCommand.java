@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
@@ -46,6 +47,8 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     public void run() {
         dataSource.flush(FlushMode.IDLE);
 
+        this.createOutputDir();
+
         this.copyNotesDb();
 
         var parsedNotes = getAllNotes()
@@ -69,6 +72,14 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
                 .execute(args);
     }
 
+    private void createOutputDir() {
+        try {
+            Files.createDirectories(Paths.get(Constants.OUTPUT_DIRECTORY));
+        } catch (IOException e) {
+            throw new RuntimeException(String.format(UserMessages.CANNOT_CREATE_OUTPUT_DIRECTORY, Constants.OUTPUT_DIRECTORY), e);
+        }
+    }
+
     private void copyNotesDb() {
         if (this.noteStoreDb != null && !this.noteStoreDb.exists()) {
             throw new RuntimeException(String.format(UserMessages.NOTES_DATABASE_DOES_NOT_EXIST_AT_SPECIFIED_PATH, this.noteStoreDb.getPath()));
@@ -77,7 +88,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         this.noteStoreDb = new File(Constants.NOTE_STORE_PATH);
 
         if (!this.noteStoreDb.exists()) {
-            throw new RuntimeException(UserMessages.CANT_AUTOMATICALLY_FIND_NOTES_DATABASE);
+            throw new RuntimeException(UserMessages.CANNOT_AUTOMATICALLY_FIND_NOTES_DATABASE);
         }
 
         try {
@@ -85,7 +96,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
                     Path.of(Constants.COPIED_NOTE_STORE_PATH),
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException(String.format(UserMessages.CANT_COPY_NOTES_DATABASE, this.noteStoreDb.getPath()));
+            throw new RuntimeException(String.format(UserMessages.CANNOT_COPY_NOTES_DATABASE, this.noteStoreDb.getPath()), e);
         }
     }
 

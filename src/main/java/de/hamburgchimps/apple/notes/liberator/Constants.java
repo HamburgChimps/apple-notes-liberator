@@ -8,7 +8,9 @@ public class Constants {
     public static final String TABLE_ROWS_KEY_NAME = "crRows";
     public static final String TABLE_COLUMNS_KEY_NAME = "crColumns";
     public static final String TABLE_CELLS_KEY_NAME = "cellColumns";
+    public static final String TABLE_IDENTIFIER = "com.apple.notes.table";
     public static final String TABLE_ROOT_IDENTIFIER = "com.apple.notes.ICTable";
-    public static final String COPIED_NOTE_STORE_PATH = "notes.sqlite";
-    public static final String NOTES_JSON_PATH = "notes.json";
+    public static final String OUTPUT_DIRECTORY = "liberated-notes";
+    public static final String COPIED_NOTE_STORE_PATH = String.format("%s/notes.sqlite", OUTPUT_DIRECTORY);
+    public static final String NOTES_JSON_PATH = String.format("%s/notes.json", OUTPUT_DIRECTORY);
 }

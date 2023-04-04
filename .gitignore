@@ -39,8 +39,4 @@ nb-configuration.xml
 # Local environment
 .env
 
-notes.sqlite
-notes.sqlite-shm
-notes.sqlite-wal
-
-notes.json
+liberated-notes
