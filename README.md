@@ -74,7 +74,7 @@ This application will attempt to locate the notes database on your computer, cop
 If the program exits with no output to the terminal, then everything should have gone well and you should have a `liberated-notes` directory inside of the directory from which you executed the program. The `liberated-notes` directory will contain the following things:
 
 - a `notes.json` file. This is a JSON representation of all extracted notes. See ["Output Format"][7] for more information.
-- Copies of all embedded files that could be extracted from your notes data. These will be referenced in the `notes.json` file. [See "Embedded object data representation -> File"][8] for more information.
+- Copies of all embedded files that could be extracted from your notes data. These will be referenced in the `notes.json` file. [See "Embedded object data representation"][8] for more information.
 
 Note that when using a third-party terminal app, such as iTerm, you may need to enable "Full Disk Access", otherwise the program will probably exit with the following error:
 
@@ -122,7 +122,7 @@ Each item in the `embeddedObjects` list will contain at minimun the following fi
 | Field Name | Description |
 | ---  | --- |
 | `type` | The type of embedded object, either `TABLE` or `FILE`. |
-| `data` | [Embedded object data representation][9] |
+| `data` | [Embedded object data representation][8] |
 
 ## Embedded object data representation
 
@@ -165,5 +165,4 @@ For example, if the `data` field contained the string `"cat-pic.png"`, then you 
 [5]: https://www.jbang.dev
 [6]: https://github.com/hamburgchimps/apple-notes-liberator/releases
 [7]: #output-format
-[8]: #file
-[9]: #embedded-object-data-representation
+[8]: #embedded-object-data-representation
