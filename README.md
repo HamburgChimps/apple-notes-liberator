@@ -76,7 +76,7 @@ If the program exits with no output to the terminal, then everything should have
 - a `notes.json` file. This is a JSON representation of all extracted notes.
 - Copies of all embedded files that could be extracted from your notes data. These will be referenced in the `notes.json` file.
 
-See [Output Format][7] for more information.
+See [Output Format][7] for more information on how the extracted information is structured.
 
 Note that when using a third-party terminal app, such as iTerm, you may need to enable "Full Disk Access", otherwise the program will probably exit with the following error:
 
