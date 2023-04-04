@@ -57,7 +57,7 @@ Free your data from Apple Notes.
   -V, --version              Print version information and exit.
 ```
 
-You're now ready to use the application! Execute `apple-notes-liberator` without any arguments to extract data from your Notes.app database.
+You're now ready to use the application! Now you can execute `apple-notes-liberator` without any arguments to extract data from your Notes.app database.
 
 Running this application via JBang in this manner has the added benefit that you will always be running the latest version.
 
