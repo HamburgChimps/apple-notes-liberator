@@ -73,8 +73,9 @@ This application will attempt to locate the notes database on your computer, cop
 
 If the program exits with no output to the terminal, then everything should have gone well and you should have a `liberated-notes` directory inside of the directory from which you executed the program. The `liberated-notes` directory will contain the following things:
 
-- a `notes.json` file. This is a JSON representation of all extracted notes.
+- A `notes.json` file. This is a JSON representation of all extracted notes.
 - Copies of all embedded files that could be extracted from your notes data. These will be referenced in the `notes.json` file.
+- A `notes.sqlite` file. This is a copy of your Notes.app SQLite database.
 
 See [Output Format][7] for more information on how the extracted information is structured.
 
