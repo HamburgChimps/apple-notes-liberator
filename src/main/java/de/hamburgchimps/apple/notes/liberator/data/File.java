@@ -36,7 +36,7 @@ public class File implements EmbeddedObjectData {
         return type;
     }
 
-    public String getFileName() {
+    public String getData() {
         return fileName;
     }
 

@@ -71,7 +71,10 @@ If you don't want to use JBang, then you will need to already have Java installe
 
 This application will attempt to locate the notes database on your computer, copy it, and parse what it can. If the application cannot locate your notes database, it will print an error to the terminal and exit. In that case, you can specify the `-f` or `--file` option, passing the path to the notes database you want the application to extract data from. 
 
-If the program exits with no output to the terminal, then everything should have gone well and you should have a `notes.json` file in the same directory from which you executed the program.
+If the program exits with no output to the terminal, then everything should have gone well and you should have a `liberated-notes` directory inside of the directory from which you executed the program. The `liberated-notes` directory will contain the following things:
+
+- a `notes.json` file. This is a JSON representation of all extracted notes. See ["Output Format"][7] for more information.
+- Copies of all embedded files that could be extracted from your notes data. These will be referenced in the `notes.json` file. [See "Embedded object data representation -> File"][8] for more information.
 
 Note that when using a third-party terminal app, such as iTerm, you may need to enable "Full Disk Access", otherwise the program will probably exit with the following error:
 
@@ -118,8 +121,8 @@ Each item in the `embeddedObjects` list will contain at minimun the following fi
 
 | Field Name | Description |
 | ---  | --- |
-| `type` | The type of embedded object. Currently, only embedded tables are extracted so this field will always contain the value `TABLE`. As support for extraction of more embedded object types is added, this field will indicate their type. |
-| `data` | [Embedded object data representation][7] |
+| `type` | The type of embedded object, either `TABLE` or `FILE`. |
+| `data` | [Embedded object data representation][9] |
 
 ## Embedded object data representation
 
@@ -148,6 +151,12 @@ Then the `data` field would contain the following two-dimensional array:
 ]
 ```
 
+### File
+
+A string containing the name of the extracted file. You can then find this file in the `liberated-notes` directory.
+
+For example, if the `data` field contained the string `"cat-pic.png"`, then you will find a file named `cat-pic.png` in the `liberated-notes` directory.
+
 [0]: https://github.com/HamburgChimps/apple-notes-liberator/issues
 [1]: https://github.com/HamburgChimps/apple-notes-liberator/pulls
 [2]: https://github.com/threeplanetssoftware/apple_cloud_notes_parser
@@ -155,4 +164,6 @@ Then the `data` field would contain the following two-dimensional array:
 [4]: https://www.ciofecaforensics.com/categories/#Apple%20Notes
 [5]: https://www.jbang.dev
 [6]: https://github.com/hamburgchimps/apple-notes-liberator/releases
-[7]: #embedded-object-data-representation
+[7]: #output-format
+[8]: #file
+[9]: #embedded-object-data-representation
