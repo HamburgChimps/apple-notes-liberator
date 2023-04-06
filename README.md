@@ -91,7 +91,7 @@ To grant "Full Disk Access" to your terminal app, open up the Control Panel->Pri
 
 ### Enable Logging
 
-If something isn't working, it might help to see what the application is doing. You can do so by passing setting the environment variable `QUARKUS_PROFILE=debug` before running the application:
+If something isn't working, it might help to see what the application is doing. You can do so by setting the environment variable `QUARKUS_PROFILE=debug` before running the application:
 
 ```bash
 QUARKUS_PROFILE=debug apple-notes-liberator
