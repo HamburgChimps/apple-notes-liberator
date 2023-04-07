@@ -118,7 +118,7 @@ The `notes.json` file will contain an array of objects, where each object repres
 | `text` | The plain text extracted from the note |
 | `embeddedObjects` | A list of the embedded note objects that were extracted from the note |
 
-Each item in the `embeddedObjects` list will contain at minimun the following fields:
+Each item in the `embeddedObjects` list will contain at minimum the following fields:
 
 | Field Name | Description |
 | ---  | --- |
