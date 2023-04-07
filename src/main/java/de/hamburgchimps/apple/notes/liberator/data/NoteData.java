@@ -81,14 +81,20 @@ public class NoteData {
     }
 
     private Optional<EmbeddedObjectData> parseEmbeddedObject(Notestore.AttachmentInfo attachmentInfo) {
+        var identifier = attachmentInfo.getAttachmentIdentifier();
         NotesCloudObject notesCloudObject = NotesCloudObject
-                .find("zIdentifier", attachmentInfo.getAttachmentIdentifier())
+                .find("zIdentifier", identifier)
                 .firstResult();
+
+        if (notesCloudObject == null) {
+            this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_IDENTIFIER_DOES_NOT_EXIST, identifier)));
+            return Optional.empty();
+        }
 
         var typeIdentifier = notesCloudObject.zTypeUti;
 
         if (typeIdentifier == null || typeIdentifier.isEmpty()) {
-            this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_NO_TYPE_IDENTIFIER, attachmentInfo.getAttachmentIdentifier())));
+            this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_NO_TYPE_IDENTIFIER, identifier)));
             return Optional.empty();
         }
 
