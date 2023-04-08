@@ -61,14 +61,14 @@ You're now ready to use the application! Execute `apple-notes-liberator` without
 
 Running the application via JBang in this manner has the added benefit that you will always be running the latest version.
 
-### Downloading and executing a release jar
-
-If you don't want to use JBang, then you will need to already have Java installed on your system such that you can run `java -version` from your terminal of choice. Then, download a release jar from the [releases][6] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
-
 ### With Nix Shell
 If you have nix installed on your computer, you can run `nix-shell` which will download a JAR from the releases page and put you into an isolated shell with Java 19.
 
 From there you can run `apple-notes-liberator`.
+
+### Downloading and executing a release jar
+
+If you don't want to use JBang or don't use Nix shell, then you will need to already have Java installed on your system such that you can run `java -version` from your terminal of choice. Then, download a release jar from the [releases][6] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
 
 ## What does this application do?
 
