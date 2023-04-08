@@ -9,7 +9,6 @@ import de.hamburgchimps.apple.notes.liberator.UserMessages;
 import de.hamburgchimps.apple.notes.liberator.data.format.Link;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
-import io.quarkus.logging.Log;
 
 import java.util.ArrayList;
 import java.util.List;
