@@ -65,6 +65,11 @@ Running the application via JBang in this manner has the added benefit that you 
 
 If you don't want to use JBang, then you will need to already have Java installed on your system such that you can run `java -version` from your terminal of choice. Then, download a release jar from the [releases][6] page. Execute the program by running `java -jar apple-notes-liberator.jar`.
 
+### With Nix Shell
+If you have nix installed on your computer, you can run `nix-shell` which will download a JAR from the releases page and put you into an isolated shell with Java 19.
+
+From there you can run `apple-notes-liberator`.
+
 ## What does this application do?
 
 This application will attempt to locate the notes database on your computer, copy it, and parse what it can. If the application cannot locate your notes database, it will print an error to the terminal and exit. In that case, you can specify the `-f` or `--file` option, passing the path to the notes database you want the application to extract data from. 
