@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
+import de.hamburgchimps.apple.notes.liberator.data.format.Link;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
+import io.quarkus.logging.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public class NoteData {
     private String folder;
     private String text;
     private List<EmbeddedObjectData> embeddedObjects;
+    private List<Link> links = new ArrayList<>();
     private NoteStoreProto proto;
     private final List<RuntimeException> errors = new ArrayList<>();
 
@@ -37,14 +40,17 @@ public class NoteData {
         this.folder = noteObject.zFolder.zTitle2;
         this.text = this.getProtoNote().getNoteText();
         this.parseEmbeddedObjects();
+        this.parseLinks();
     }
 
     public String getTitle() {
         return title;
     }
+
     public String getFolder() {
         return folder;
     }
+
     public String getText() {
         return text;
     }
@@ -52,6 +58,11 @@ public class NoteData {
     public List<EmbeddedObjectData> getEmbeddedObjects() {
         return embeddedObjects;
     }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
     @JsonIgnore
     public List<RuntimeException> getErrors() {
         return errors;
@@ -87,6 +98,8 @@ public class NoteData {
                 .firstResult();
 
         if (notesCloudObject == null) {
+            // We are most likely dealing with a deleted note that has some dead references
+            // hanging around in the database still. There is not much we can do with these.
             this.errors.add(new RuntimeException(String.format(UserMessages.EMBEDDED_OBJECT_PARSE_ERROR_IDENTIFIER_DOES_NOT_EXIST, identifier)));
             return Optional.empty();
         }
@@ -105,6 +118,19 @@ public class NoteData {
 
         // otherwise assume the embedded object is a file
         return Optional.of(new File(notesCloudObject));
+    }
+
+    private void parseLinks() {
+        // TODO this is hacky
+        var positionTracker = 0;
+
+        for (var attributeRun : this.getProtoNote().getAttributeRunList()) {
+            if (attributeRun.hasLink()) {
+                var endOfLinkText = positionTracker + attributeRun.getLength();
+                this.links.add(new Link(this.getText().substring(positionTracker, endOfLinkText), attributeRun.getLink()));
+            }
+            positionTracker += attributeRun.getLength();
+        }
     }
 
     private Notestore.Note getProtoNote() {
