@@ -10,7 +10,7 @@ in pkgs.mkShell {
     pkgs.openjdk19
   ];
 
-    shellHook = ''
+  shellHook = ''
       cp ${apple-notes-liberator} .
       alias apple-notes-liberator='java -jar ${apple-notes-liberator}'
       echo "Usage: apple-notes-liberator"
