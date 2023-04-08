@@ -103,7 +103,7 @@ If you didn't install the application with JBang, but instead downloaded a relea
 java -Dquarkus.profile=debug -jar apple-notes-liberator.jar
 ```
 
-This will result in a log file named `apple-notes-liberator.log` being generated in the directory where you executed the command.
+This will result in a log file named `apple-notes-liberator.log` being generated in the `liberated-notes` directory.
 
 ## Output format
 
@@ -117,6 +117,7 @@ The `notes.json` file will contain an array of objects, where each object repres
 | `folder` | The name of the folder that the note is located in |
 | `text` | The plain text extracted from the note |
 | `embeddedObjects` | A list of the embedded note objects that were extracted from the note |
+| `links` | A list of links that were extracted from the note. Each object in the `links` list has a `text` and `url` property. |
 
 Each item in the `embeddedObjects` list will contain at minimum the following fields:
 
