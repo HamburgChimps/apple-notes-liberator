@@ -7,10 +7,6 @@ import com.ciofecaforensics.Notestore.ObjectID;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ProtocolStringList;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
-import de.hamburgchimps.apple.notes.liberator.data.Markdownable;
-import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectData;
-import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectDataType;
-import de.hamburgchimps.apple.notes.liberator.data.embedded.TableDirection;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 import io.quarkus.logging.Log;
 
@@ -38,7 +34,7 @@ import static de.hamburgchimps.apple.notes.liberator.data.embedded.TableDirectio
 // Check out their work:
 // https://github.com/threeplanetssoftware/apple_cloud_notes_parser/blob/master/lib/AppleNotesEmbeddedTable.rb
 // This implementation is basically a 1-to-1 translation of their parsing code into java.
-public class Table implements EmbeddedObjectData, Markdownable {
+public class Table implements EmbeddedObjectData {
 
     private TableDirection direction;
     private ProtocolStringList keys;

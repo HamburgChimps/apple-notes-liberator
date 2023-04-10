@@ -9,6 +9,8 @@ import de.hamburgchimps.apple.notes.liberator.UserMessages;
 import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectData;
 import de.hamburgchimps.apple.notes.liberator.data.embedded.File;
 import de.hamburgchimps.apple.notes.liberator.data.embedded.Table;
+import de.hamburgchimps.apple.notes.liberator.data.format.BoldText;
+import de.hamburgchimps.apple.notes.liberator.data.format.FormattingInfo;
 import de.hamburgchimps.apple.notes.liberator.data.format.Link;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
@@ -22,8 +24,9 @@ public class NoteData implements Markdownable {
     private String title;
     private String folder;
     private String text;
-    private List<EmbeddedObjectData> embeddedObjects;
-    private List<Link> links = new ArrayList<>();
+    private final List<FormattingInfo> formattingInformation = new ArrayList<>();
+    private final List<EmbeddedObjectData> embeddedObjects = new ArrayList<>();
+    private final List<Link> links = new ArrayList<>();
     private NoteStoreProto proto;
     private final List<RuntimeException> errors = new ArrayList<>();
 
@@ -41,8 +44,7 @@ public class NoteData implements Markdownable {
         this.title = noteObject.zTitle1;
         this.folder = noteObject.zFolder.zTitle2;
         this.text = this.getProtoNote().getNoteText();
-        this.parseEmbeddedObjects();
-        this.parseLinks();
+        this.parseFormattingInformation();
     }
 
     @Override
@@ -86,16 +88,32 @@ public class NoteData implements Markdownable {
         this.proto = parseResult.get();
     }
 
-    private void parseEmbeddedObjects() {
-        this.embeddedObjects = this.getProtoNote()
-                .getAttributeRunList()
-                .stream()
-                .filter(Notestore.AttributeRun::hasAttachmentInfo)
-                .map(Notestore.AttributeRun::getAttachmentInfo)
-                .map(this::parseEmbeddedObject)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList();
+    private void parseFormattingInformation() {
+        this.formattingInformation.clear();
+        this.embeddedObjects.clear();
+        this.links.clear();
+
+        var positionTracker = 0;
+
+        for (var attributeRun : this.getProtoNote().getAttributeRunList()) {
+            Markdownable formattingItem = null;
+            var endOfFormattingItem = positionTracker + attributeRun.getLength();
+            if (attributeRun.hasAttachmentInfo()) {
+                var embeddedObject = this.parseEmbeddedObject(attributeRun.getAttachmentInfo());
+                embeddedObject.ifPresent(this.embeddedObjects::add);
+                formattingItem = embeddedObject.orElse(null);
+            }
+            if (attributeRun.hasLink()) {
+                var link = new Link(this.getText().substring(positionTracker, endOfFormattingItem), attributeRun.getLink());
+                this.links.add(link);
+                formattingItem = link;
+            }
+            if (attributeRun.hasFontWeight()) {
+                formattingItem = new BoldText(positionTracker, endOfFormattingItem);
+            }
+            this.formattingInformation.add(new FormattingInfo(positionTracker, formattingItem));
+            positionTracker += attributeRun.getLength();
+        }
     }
 
     private Optional<EmbeddedObjectData> parseEmbeddedObject(Notestore.AttachmentInfo attachmentInfo) {
@@ -125,19 +143,6 @@ public class NoteData implements Markdownable {
 
         // otherwise assume the embedded object is a file
         return Optional.of(new File(notesCloudObject));
-    }
-
-    private void parseLinks() {
-        // TODO this is hacky
-        var positionTracker = 0;
-
-        for (var attributeRun : this.getProtoNote().getAttributeRunList()) {
-            if (attributeRun.hasLink()) {
-                var endOfLinkText = positionTracker + attributeRun.getLength();
-                this.links.add(new Link(this.getText().substring(positionTracker, endOfLinkText), attributeRun.getLink()));
-            }
-            positionTracker += attributeRun.getLength();
-        }
     }
 
     private Notestore.Note getProtoNote() {
