@@ -1,8 +1,10 @@
-package de.hamburgchimps.apple.notes.liberator.data;
+package de.hamburgchimps.apple.notes.liberator.data.embedded;
 
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
-import de.hamburgchimps.apple.notes.liberator.data.format.Markdownable;
+import de.hamburgchimps.apple.notes.liberator.data.Markdownable;
+import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectData;
+import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectDataType;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 
 import java.io.IOException;

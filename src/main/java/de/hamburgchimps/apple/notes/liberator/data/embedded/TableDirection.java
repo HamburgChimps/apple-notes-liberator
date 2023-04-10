@@ -1,4 +1,4 @@
-package de.hamburgchimps.apple.notes.liberator.data;
+package de.hamburgchimps.apple.notes.liberator.data.embedded;
 
 import java.util.Arrays;
 import java.util.HashMap;

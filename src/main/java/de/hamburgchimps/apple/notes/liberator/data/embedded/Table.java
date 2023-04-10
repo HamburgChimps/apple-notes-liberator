@@ -1,4 +1,4 @@
-package de.hamburgchimps.apple.notes.liberator.data;
+package de.hamburgchimps.apple.notes.liberator.data.embedded;
 
 import com.ciofecaforensics.Notestore.MapEntry;
 import com.ciofecaforensics.Notestore.MergableDataProto;
@@ -7,7 +7,10 @@ import com.ciofecaforensics.Notestore.ObjectID;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ProtocolStringList;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
-import de.hamburgchimps.apple.notes.liberator.data.format.Markdownable;
+import de.hamburgchimps.apple.notes.liberator.data.Markdownable;
+import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectData;
+import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectDataType;
+import de.hamburgchimps.apple.notes.liberator.data.embedded.TableDirection;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 import io.quarkus.logging.Log;
 
@@ -28,8 +31,8 @@ import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROOT_IDENTI
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROWS_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_FIND_ROOT;
 import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_PARSE_PROTO;
-import static de.hamburgchimps.apple.notes.liberator.data.TableDirection.DIRECTION_IDENTIFIER_TO_DIRECTION;
-import static de.hamburgchimps.apple.notes.liberator.data.TableDirection.UNKNOWN;
+import static de.hamburgchimps.apple.notes.liberator.data.embedded.TableDirection.DIRECTION_IDENTIFIER_TO_DIRECTION;
+import static de.hamburgchimps.apple.notes.liberator.data.embedded.TableDirection.UNKNOWN;
 
 // The only reason I was able to parse an Apple Notes table is because someone else did it first.
 // Check out their work:

@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
+import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectData;
+import de.hamburgchimps.apple.notes.liberator.data.embedded.File;
+import de.hamburgchimps.apple.notes.liberator.data.embedded.Table;
 import de.hamburgchimps.apple.notes.liberator.data.format.Link;
-import de.hamburgchimps.apple.notes.liberator.data.format.Markdownable;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 
