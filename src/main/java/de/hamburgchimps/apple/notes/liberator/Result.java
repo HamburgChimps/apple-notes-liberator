@@ -1,6 +1,6 @@
 package de.hamburgchimps.apple.notes.liberator;
 
-// TODO: extract this into it's own pacakge
+// TODO: extract this into its own package
 public class Result<T, E extends Throwable> {
     private final T value;
     private final E error;
