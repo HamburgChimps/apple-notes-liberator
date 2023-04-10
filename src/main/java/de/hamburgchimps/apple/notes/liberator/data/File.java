@@ -2,6 +2,7 @@ package de.hamburgchimps.apple.notes.liberator.data;
 
 import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
+import de.hamburgchimps.apple.notes.liberator.data.format.Markdownable;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-public class File implements EmbeddedObjectData {
+public class File implements EmbeddedObjectData, Markdownable {
     private final EmbeddedObjectDataType type = EmbeddedObjectDataType.FILE;
     private String fileName;
     private Path noteStoreFilePath;
@@ -29,6 +30,11 @@ public class File implements EmbeddedObjectData {
         this.outputFilePath = Path.of(Constants.OUTPUT_DIRECTORY, this.fileName);
 
         this.copyToOutputDir();
+    }
+
+    @Override
+    public String toMarkdown() {
+        return null;
     }
 
     @Override

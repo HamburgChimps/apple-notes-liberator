@@ -7,6 +7,7 @@ import com.ciofecaforensics.Notestore.ObjectID;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ProtocolStringList;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
+import de.hamburgchimps.apple.notes.liberator.data.format.Markdownable;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 import io.quarkus.logging.Log;
 
@@ -34,7 +35,7 @@ import static de.hamburgchimps.apple.notes.liberator.data.TableDirection.UNKNOWN
 // Check out their work:
 // https://github.com/threeplanetssoftware/apple_cloud_notes_parser/blob/master/lib/AppleNotesEmbeddedTable.rb
 // This implementation is basically a 1-to-1 translation of their parsing code into java.
-public class Table implements EmbeddedObjectData {
+public class Table implements EmbeddedObjectData, Markdownable {
 
     private TableDirection direction;
     private ProtocolStringList keys;
@@ -103,6 +104,11 @@ public class Table implements EmbeddedObjectData {
         this.parse();
 
         this.reverseRowsIfNeeded();
+    }
+
+    @Override
+    public String toMarkdown() {
+        return null;
     }
 
     public List<List<String>> getData() {

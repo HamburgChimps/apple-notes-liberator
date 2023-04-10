@@ -7,6 +7,7 @@ import de.hamburgchimps.apple.notes.liberator.Constants;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
 import de.hamburgchimps.apple.notes.liberator.UserMessages;
 import de.hamburgchimps.apple.notes.liberator.data.format.Link;
+import de.hamburgchimps.apple.notes.liberator.data.format.Markdownable;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class NoteData {
+public class NoteData implements Markdownable {
     private final Note note;
     private String title;
     private String folder;
@@ -40,6 +41,11 @@ public class NoteData {
         this.text = this.getProtoNote().getNoteText();
         this.parseEmbeddedObjects();
         this.parseLinks();
+    }
+
+    @Override
+    public String toMarkdown() {
+        return null;
     }
 
     public String getTitle() {
