@@ -98,18 +98,19 @@ public class NoteData implements Markdownable {
         for (var attributeRun : this.getProtoNote().getAttributeRunList()) {
             Markdownable formattingItem = null;
             var endOfFormattingItem = positionTracker + attributeRun.getLength();
+            var formattingItemText = this.getText().substring(positionTracker, endOfFormattingItem);
             if (attributeRun.hasAttachmentInfo()) {
                 var embeddedObject = this.parseEmbeddedObject(attributeRun.getAttachmentInfo());
                 embeddedObject.ifPresent(this.embeddedObjects::add);
                 formattingItem = embeddedObject.orElse(null);
             }
             if (attributeRun.hasLink()) {
-                var link = new Link(this.getText().substring(positionTracker, endOfFormattingItem), attributeRun.getLink());
+                var link = new Link(formattingItemText, attributeRun.getLink());
                 this.links.add(link);
                 formattingItem = link;
             }
             if (attributeRun.hasFontWeight()) {
-                formattingItem = new BoldText(positionTracker, endOfFormattingItem);
+                formattingItem = new BoldText(formattingItemText);
             }
             this.formattingInformation.add(new FormattingInfo(positionTracker, formattingItem));
             positionTracker += attributeRun.getLength();
