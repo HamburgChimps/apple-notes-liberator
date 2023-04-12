@@ -64,13 +64,13 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
             Log.error(e);
         }
 
-        int counter = 1;
+        int counter = 0;
         for (var note : parsedNotes) {
             try {
                 String noteTitle = note.getTitle();
                 String fileName;
                 if (noteTitle == null) {
-                    fileName = String.format("unnamed-note-%d.md", counter);
+                    fileName = String.format("unnamed-note-%d.md", ++counter);
                 } else {
                     fileName = String.format("%s.md", noteTitle.replace(" ", "-").replace("/", "-"));
                 }
