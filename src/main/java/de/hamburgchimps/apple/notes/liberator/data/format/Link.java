@@ -5,6 +5,6 @@ import de.hamburgchimps.apple.notes.liberator.data.Markdownable;
 public record Link(String text, String url) implements Markdownable {
     @Override
     public String toMarkdown() {
-        return null;
+        return String.format("[%s](%s)", text, url);
     }
 }

@@ -63,6 +63,22 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         } catch (IOException e) {
             Log.error(e);
         }
+
+        int counter = 1;
+        for (var note : parsedNotes) {
+            try {
+                String noteTitle = note.getTitle();
+                String fileName;
+                if (noteTitle == null) {
+                    fileName = String.format("unnamed-note-%d.md", counter);
+                } else {
+                    fileName = String.format("%s.md", noteTitle.replace(" ", "-").replace("/", "-"));
+                }
+                Files.write(Path.of(String.format("%s/%s", Constants.OUTPUT_DIRECTORY, fileName)), note.toMarkdown().getBytes());
+            } catch (IOException e) {
+                Log.error(e);
+            }
+        }
     }
 
     @Override

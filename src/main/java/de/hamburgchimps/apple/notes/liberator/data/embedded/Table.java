@@ -107,7 +107,25 @@ public class Table implements EmbeddedObjectData {
 
     @Override
     public String toMarkdown() {
-        return null;
+        var markdownBuilder = new StringBuilder();
+
+        if (this.data == null) {
+            return null;
+        }
+
+        for (var row: this.data) {
+            for (var column: row) {
+                markdownBuilder
+                        .append("|")
+                        .append(" ")
+                        .append(column)
+                        .append(" ");
+            }
+            markdownBuilder.append("|");
+            markdownBuilder.append("\r\n");
+        }
+
+        return markdownBuilder.toString();
     }
 
     public List<List<String>> getData() {

@@ -33,7 +33,14 @@ public class File implements EmbeddedObjectData {
 
     @Override
     public String toMarkdown() {
-        return null;
+        if (this.fileName == null) {
+            return null;
+        }
+        // TODO improve this
+        if (this.fileName.contains(".png") || this.fileName.contains(".jpeg")) {
+            return String.format("![%s](%s)", this.fileName, this.outputFilePath);
+        }
+        return String.format("[%s](%s)", this.fileName, this.outputFilePath);
     }
 
     @Override

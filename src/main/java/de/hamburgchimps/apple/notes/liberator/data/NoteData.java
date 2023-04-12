@@ -12,6 +12,7 @@ import de.hamburgchimps.apple.notes.liberator.data.embedded.Table;
 import de.hamburgchimps.apple.notes.liberator.data.format.BoldText;
 import de.hamburgchimps.apple.notes.liberator.data.format.FormattingInfo;
 import de.hamburgchimps.apple.notes.liberator.data.format.Link;
+import de.hamburgchimps.apple.notes.liberator.data.format.Paragraph;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 
@@ -49,7 +50,19 @@ public class NoteData implements Markdownable {
 
     @Override
     public String toMarkdown() {
-        return null;
+        var markdownBuilder = new StringBuilder()
+                .append("#")
+                .append(" ")
+                .append(this.title)
+                .append("\r\n");
+
+        this.formattingInformation
+                .stream()
+                .map(FormattingInfo::markdownable)
+                .map(Markdownable::toMarkdown)
+                .forEach(markdownBuilder::append);
+
+        return markdownBuilder.toString();
     }
 
     public String getTitle() {
@@ -111,6 +124,9 @@ public class NoteData implements Markdownable {
             }
             if (attributeRun.hasFontWeight()) {
                 formattingItem = new BoldText(formattingItemText);
+            }
+            if (formattingItem == null) {
+                formattingItem = new Paragraph(formattingItemText);
             }
             this.formattingInformation.add(new FormattingInfo(positionTracker, formattingItem));
             positionTracker += attributeRun.getLength();
