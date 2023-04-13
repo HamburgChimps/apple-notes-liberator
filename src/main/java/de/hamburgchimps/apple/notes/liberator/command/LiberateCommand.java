@@ -31,6 +31,8 @@ import java.util.List;
 public class LiberateCommand implements Runnable, QuarkusApplication {
     @Option(names = {"-f", "--file"}, description = "Path to Apple Notes sqlite file")
     private File noteStoreDb;
+    @Option(names = {"-m", "--markdown"}, description = "Generate markdown")
+    private boolean generateMarkdown;
     private final CommandLine.IFactory factory;
     private final AgroalDataSource dataSource;
     private final ObjectMapper objectMapper;
@@ -62,6 +64,10 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
             Files.write(Path.of(Constants.NOTES_JSON_PATH), objectMapper.writeValueAsString(parsedNotes).getBytes());
         } catch (IOException e) {
             Log.error(e);
+        }
+
+        if (!generateMarkdown) {
+            return;
         }
 
         int counter = 0;
