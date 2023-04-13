@@ -38,9 +38,9 @@ public class File implements EmbeddedObjectData {
         }
         // TODO improve this
         if (this.fileName.contains(".png") || this.fileName.contains(".jpeg")) {
-            return String.format("![%s](%s)", this.fileName, this.outputFilePath);
+            return String.format("![%s](../%s)", this.fileName, this.fileName);
         }
-        return String.format("[%s](%s)", this.fileName, this.outputFilePath);
+        return String.format("[%s](../%s)", this.fileName, this.fileName);
     }
 
     @Override

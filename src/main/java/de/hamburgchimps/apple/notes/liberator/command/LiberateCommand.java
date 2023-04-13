@@ -15,6 +15,8 @@ import io.quarkus.runtime.annotations.QuarkusMain;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.Spec;
+import picocli.CommandLine.Model.CommandSpec;
 
 import javax.enterprise.context.control.ActivateRequestContext;
 import java.io.File;
@@ -31,11 +33,16 @@ import java.util.List;
 public class LiberateCommand implements Runnable, QuarkusApplication {
     @Option(names = {"-f", "--file"}, description = "Path to Apple Notes sqlite file")
     private File noteStoreDb;
-    @Option(names = {"-m", "--markdown"}, description = "Generate markdown")
+    @Option(names = {"-j", "--json"}, description = "Generate JSON")
+    private boolean generateJson;
+    @Option(names = {"-m", "--markdown"}, description = "Generate markdown (in early development, please report bugs and request features here -> https://github.com/HamburgChimps/apple-notes-liberator/issues)")
     private boolean generateMarkdown;
+    @Spec
+    private CommandSpec spec;
     private final CommandLine.IFactory factory;
     private final AgroalDataSource dataSource;
     private final ObjectMapper objectMapper;
+    private List<NoteData> parsedNotes;
 
     public LiberateCommand(CommandLine.IFactory factory, AgroalDataSource dataSource) {
         this.factory = factory;
@@ -47,44 +54,32 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
     @Override
     @ActivateRequestContext
     public void run() {
+        if (!this.generateJson && !this.generateMarkdown) {
+            spec.commandLine().usage(System.out);
+            return;
+        }
+
         dataSource.flush(FlushMode.IDLE);
 
         this.createOutputDir();
 
         this.copyNotesDb();
 
-        var parsedNotes = getAllNotes()
+        this.parsedNotes = getAllNotes()
                 .stream()
                 .map(NoteData::new)
                 .toList();
 
         Log.infov("Parsed {0} notes.", parsedNotes.size());
 
-        try {
-            Files.write(Path.of(Constants.NOTES_JSON_PATH), objectMapper.writeValueAsString(parsedNotes).getBytes());
-        } catch (IOException e) {
-            Log.error(e);
+        if (generateJson) {
+            this.generateJson();
         }
 
-        if (!generateMarkdown) {
-            return;
+        if (generateMarkdown) {
+            this.generateMarkdown();
         }
 
-        int counter = 0;
-        for (var note : parsedNotes) {
-            try {
-                String noteTitle = note.getTitle();
-                String fileName;
-                if (noteTitle == null) {
-                    fileName = String.format("unnamed-note-%d.md", ++counter);
-                } else {
-                    fileName = String.format("%s.md", noteTitle.replace(" ", "-").replace("/", "-"));
-                }
-                Files.write(Path.of(String.format("%s/%s", Constants.OUTPUT_DIRECTORY, fileName)), note.toMarkdown().getBytes());
-            } catch (IOException e) {
-                Log.error(e);
-            }
-        }
     }
 
     @Override
@@ -99,6 +94,37 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
             Files.createDirectories(Paths.get(Constants.OUTPUT_DIRECTORY));
         } catch (IOException e) {
             throw new RuntimeException(String.format(UserMessages.CANNOT_CREATE_OUTPUT_DIRECTORY, Constants.OUTPUT_DIRECTORY), e);
+        }
+    }
+
+    private void generateJson() {
+        try {
+            Files.write(Path.of(Constants.NOTES_JSON_PATH), this.objectMapper.writeValueAsString(parsedNotes).getBytes());
+        } catch (IOException e) {
+            Log.error(e);
+        }
+    }
+
+    private void generateMarkdown() {
+        try {
+            Files.createDirectories(Paths.get(Constants.OUTPUT_DIRECTORY, "markdown"));
+        } catch (IOException e) {
+            throw new RuntimeException(String.format(UserMessages.CANNOT_CREATE_OUTPUT_DIRECTORY, Constants.OUTPUT_DIRECTORY), e);
+        }
+        int counter = 0;
+        for (var note : this.parsedNotes) {
+            try {
+                String noteTitle = note.getTitle();
+                String fileName;
+                if (noteTitle == null) {
+                    fileName = String.format("unnamed-note-%d.md", ++counter);
+                } else {
+                    fileName = String.format("%s.md", noteTitle.toLowerCase().replace(" ", "-").replace("/", "-"));
+                }
+                Files.write(Path.of(Constants.OUTPUT_DIRECTORY, "markdown", fileName), note.toMarkdown().getBytes());
+            } catch (IOException e) {
+                Log.error(e);
+            }
         }
     }
 

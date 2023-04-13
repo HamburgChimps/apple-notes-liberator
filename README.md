@@ -1,6 +1,6 @@
 # Apple Notes Liberator
 
-Free your Apple Notes data from Notes.app. Currently extracts Note folders, titles, text, tables, and links. Support for extracting more data is planned.
+Free your Apple Notes data from Notes.app.
 
 ## Credit where credit is due
 
@@ -50,18 +50,24 @@ You should then see the following output in your terminal:
 Run `apple-notes-liberator --help` from your terminal. You should see the following output:
 
 ```bash
-Usage: <main class> [-hV] [-f=<noteStoreDb>]
+Usage: <main class> [-hjmV] [-f=<noteStoreDb>]
 Free your data from Apple Notes.
   -f, --file=<noteStoreDb>   Path to Apple Notes sqlite file
   -h, --help                 Show this help message and exit.
+  -j, --json                 Generate JSON
+  -m, --markdown             Generate markdown (in early development, please
+                               report bugs and request features here -> https:
+                               //github.
+                               com/HamburgChimps/apple-notes-liberator/issues)
   -V, --version              Print version information and exit.
 ```
 
-You're now ready to use the application! Execute `apple-notes-liberator` without any arguments to extract data from Notes.app.
+You're now ready to use the application!
 
 Running the application via JBang in this manner has the added benefit that you will always be running the latest version.
 
 ### With Nix Shell
+
 If you have nix installed on your computer, you can run `nix-shell` which will download a JAR from the releases page and put you into an isolated shell with Java 19.
 
 From there you can run `apple-notes-liberator`.
@@ -72,12 +78,15 @@ If you don't want to use JBang or don't use Nix shell, then you will need to alr
 
 ## What does this application do?
 
-This application will attempt to locate the notes database on your computer, copy it, and parse what it can. If the application cannot locate your notes database, it will print an error to the terminal and exit. In that case, you can specify the `-f` or `--file` option, passing the path to the notes database you want the application to extract data from. 
+This application will attempt to locate the notes database on your computer, copy it, and parse what it can. If the application cannot locate your notes database, it will print an error to the terminal and exit. In that case, you can specify the `-f` or `--file` option, passing the path to the notes database you want the application to extract data from.
 
-If the program exits with no output to the terminal, then everything should have gone well and you should have a `liberated-notes` directory inside of the directory from which you executed the program. The `liberated-notes` directory will contain the following things:
+The application will generate JSON and/or markdown from your Notes.app data depending on the options you specify. You must specify at least one of either `-j (--json)` or `-m (--markdown)` for the application to do anything. If you do not specify at least one of these options, the application will output its usage information to the terminal and exit without doing anything.
 
-- A `notes.json` file. This is a JSON representation of all extracted notes.
-- Copies of all embedded files that could be extracted from your notes data. These will be referenced in the `notes.json` file.
+If the program exits with no output to the terminal, then everything should have gone well and you should have a `liberated-notes` directory inside of the directory from which you executed the program. The `liberated-notes` directory will contain the following things depending on the options you provided:
+
+- A `notes.json` file. This is a JSON representation of all extracted notes. This is present when the `-j` or `--json` option was specified.
+- A `markdown/` directory containing a markdown file for each note in your Notes.app database. This is present when the the `-m` or `--markdown` option was specified.
+- Copies of all embedded files that could be extracted from your notes data. These will be referenced in the `notes.json` file and the generated markdown files.
 - A `notes.sqlite` file. This is a copy of your Notes.app SQLite database.
 
 See [Output Format][7] for more information on how the extracted information is structured.
@@ -173,3 +182,4 @@ For example, if the `data` field contained the string `"cat-pic.png"`, then you 
 [6]: https://github.com/hamburgchimps/apple-notes-liberator/releases
 [7]: #output-format
 [8]: #embedded-object-data-representation
+[9]: #what-does-this-application-do
