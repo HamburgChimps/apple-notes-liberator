@@ -85,11 +85,11 @@ The application will generate JSON and/or markdown from your Notes.app data depe
 If the program exits with no output to the terminal, then everything should have gone well and you should have a `liberated-notes` directory inside of the directory from which you executed the program. The `liberated-notes` directory will contain the following things depending on the options you provided:
 
 - A `notes.json` file. This is a JSON representation of all extracted notes. This is present when the `-j` or `--json` option was specified.
+See [JSON Output Format][7] for more information on how this JSON is structured.
+
 - A `markdown/` directory containing a markdown file for each note in your Notes.app database. This is present when the the `-m` or `--markdown` option was specified.
 - Copies of all embedded files that could be extracted from your notes data. These will be referenced in the `notes.json` file and the generated markdown files.
 - A `notes.sqlite` file. This is a copy of your Notes.app SQLite database.
-
-See [Output Format][7] for more information on how the extracted information is structured.
 
 Note that when using a third-party terminal app, such as iTerm, you may need to enable "Full Disk Access", otherwise the program will probably exit with the following error:
 
@@ -119,9 +119,7 @@ java -Dquarkus.profile=debug -jar apple-notes-liberator.jar
 
 This will result in a log file named `apple-notes-liberator.log` being generated in the `liberated-notes` directory.
 
-## Output format
-
-Currently, the only supported output format is json, though support for html and csv is planned.
+## JSON Output format
 
 The `notes.json` file will contain an array of objects, where each object represents an Apple Note, and will contain the following fields:
 
@@ -180,6 +178,6 @@ For example, if the `data` field contained the string `"cat-pic.png"`, then you 
 [4]: https://www.ciofecaforensics.com/categories/#Apple%20Notes
 [5]: https://www.jbang.dev
 [6]: https://github.com/hamburgchimps/apple-notes-liberator/releases
-[7]: #output-format
+[7]: #json-output-format
 [8]: #embedded-object-data-representation
 [9]: #what-does-this-application-do
