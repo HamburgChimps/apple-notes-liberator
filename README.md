@@ -80,7 +80,7 @@ If you don't want to use JBang or don't use Nix shell, then you will need to alr
 
 This application will attempt to locate the notes database on your computer, copy it, and parse what it can. If the application cannot locate your notes database, it will print an error to the terminal and exit. In that case, you can specify the `-f` or `--file` option, passing the path to the notes database you want the application to extract data from.
 
-The application will generate JSON and/or markdown from your Notes.app data depending on the options you specify. You must specify at least one of either `-j (--json)` or `-m (--markdown)` for the application to do anything. If you do not specify at least one of these options, the application will output its usage information to the terminal and exit without doing anything.
+The application will generate JSON and/or markdown from your Notes.app data depending on the options you specify. You must specify at least one of either `-j (--json)` or `-m (--markdown)` for the application to do anything. If you do not specify at least one of these options, the application will output its usage information to the terminal and exit.
 
 If the program exits with no output to the terminal, then everything should have gone well and you should have a `liberated-notes` directory inside of the directory from which you executed the program. The `liberated-notes` directory will contain the following things depending on the options you provided:
 
