@@ -119,7 +119,12 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
                 if (noteTitle == null) {
                     fileName = String.format("unnamed-note-%d.md", ++counter);
                 } else {
-                    fileName = String.format("%s.md", noteTitle.toLowerCase().replace(" ", "-").replace("/", "-"));
+                    fileName = String.format("%s.md", noteTitle
+                            .toLowerCase()
+                            .replace(" ", "-")
+                            .replace("/", "-")
+                            .replace("\"", "-")
+                            .replace(":", "-"));
                 }
                 Files.write(Path.of(Constants.OUTPUT_DIRECTORY, "markdown", fileName), note.toMarkdown().getBytes());
             } catch (IOException e) {
