@@ -10,7 +10,6 @@ import de.hamburgchimps.apple.notes.liberator.data.embedded.EmbeddedObjectData;
 import de.hamburgchimps.apple.notes.liberator.data.embedded.File;
 import de.hamburgchimps.apple.notes.liberator.data.embedded.Table;
 import de.hamburgchimps.apple.notes.liberator.data.format.BoldText;
-import de.hamburgchimps.apple.notes.liberator.data.format.FormattingInfo;
 import de.hamburgchimps.apple.notes.liberator.data.format.Link;
 import de.hamburgchimps.apple.notes.liberator.data.format.Paragraph;
 import de.hamburgchimps.apple.notes.liberator.entity.Note;
@@ -25,7 +24,7 @@ public class NoteData implements Markdownable {
     private String title;
     private String folder;
     private String text;
-    private final List<FormattingInfo> formattingInformation = new ArrayList<>();
+    private final List<Markdownable> markdownItems = new ArrayList<>();
     private final List<EmbeddedObjectData> embeddedObjects = new ArrayList<>();
     private final List<Link> links = new ArrayList<>();
     private NoteStoreProto proto;
@@ -54,11 +53,10 @@ public class NoteData implements Markdownable {
                 .append("#")
                 .append(" ")
                 .append(this.title)
-                .append("\r\n\r\n");
+                .append("\n\n");
 
-        this.formattingInformation
+        this.markdownItems
                 .stream()
-                .map(FormattingInfo::markdownable)
                 .map(Markdownable::toMarkdown)
                 .forEach(markdownBuilder::append);
 
@@ -102,7 +100,7 @@ public class NoteData implements Markdownable {
     }
 
     private void parseFormattingInformation() {
-        this.formattingInformation.clear();
+        this.markdownItems.clear();
         this.embeddedObjects.clear();
         this.links.clear();
 
@@ -128,7 +126,7 @@ public class NoteData implements Markdownable {
             if (formattingItem == null) {
                 formattingItem = new Paragraph(formattingItemText);
             }
-            this.formattingInformation.add(new FormattingInfo(positionTracker, formattingItem));
+            this.markdownItems.add(formattingItem);
             positionTracker += attributeRun.getLength();
         }
     }

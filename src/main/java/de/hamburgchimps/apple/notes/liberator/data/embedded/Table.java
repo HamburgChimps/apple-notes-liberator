@@ -114,8 +114,8 @@ public class Table implements EmbeddedObjectData {
         }
 
         var isTitleRow = true;
-        for (var row: this.data) {
-            for (var column: row) {
+        for (var row : this.data) {
+            for (var column : row) {
                 markdownBuilder
                         .append("|")
                         .append(" ")
@@ -123,10 +123,10 @@ public class Table implements EmbeddedObjectData {
                         .append(" ");
             }
             markdownBuilder.append("|");
-            markdownBuilder.append("\r\n");
+            markdownBuilder.append("\n");
             if (isTitleRow) {
                 markdownBuilder.append("| --- | --- |");
-                markdownBuilder.append("\r\n");
+                markdownBuilder.append("\n");
                 isTitleRow = false;
             }
         }
