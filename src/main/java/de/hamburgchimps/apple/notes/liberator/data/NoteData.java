@@ -54,7 +54,7 @@ public class NoteData implements Markdownable {
                 .append("#")
                 .append(" ")
                 .append(this.title)
-                .append("\r\n");
+                .append("\r\n\r\n");
 
         this.formattingInformation
                 .stream()
