@@ -79,7 +79,6 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
         if (generateMarkdown) {
             this.generateMarkdown();
         }
-
     }
 
     @Override
