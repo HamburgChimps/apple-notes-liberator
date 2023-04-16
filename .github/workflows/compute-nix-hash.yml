@@ -1,6 +1,5 @@
 name: Compute Nix Hash
 on: workflow_dispatch
-
 jobs:
   compute-nix-hash:
     runs-on: ubuntu-latest
