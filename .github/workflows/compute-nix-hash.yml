@@ -1,0 +1,11 @@
+name: Compute Nix Hash
+on: workflow_dispatch
+
+jobs:
+  compute-nix-hash:
+    runs-on: ubuntu-latest
+    name: Compute Nix Hash
+    steps:
+      - uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v19
+      - run: nix-hash
