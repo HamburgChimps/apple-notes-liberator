@@ -14,4 +14,4 @@ jobs:
           distribution: 'temurin'
       - uses: cachix/install-nix-action@v19
       - run: mvn --batch-mode verify
-      - run: nix-hash --path target/*.jar
+      - run: nix-hash target/*.jar
