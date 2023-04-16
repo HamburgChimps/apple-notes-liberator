@@ -2,7 +2,7 @@
 
 let
   apple-notes-liberator = pkgs.fetchurl {
-    url = "https://github.com/HamburgChimps/apple-notes-liberator/releases/download/v2.0.0/apple-notes-liberator.jar";
+    url = "https://github.com/HamburgChimps/apple-notes-liberator/releases/download/v2.1.0/apple-notes-liberator.jar";
     sha256="sha256-QNecOkv8E9MtQztfQSNi0zJc3tkRsySCyz6vSrr9Qe8=";
   };
 in pkgs.mkShell {
