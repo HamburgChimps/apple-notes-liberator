@@ -7,5 +7,11 @@ jobs:
     name: Compute Nix Hash
     steps:
       - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - uses: cachix/install-nix-action@v19
-      - run: nix-hash
+      - run: mvn --batch-mode verify
+      - run: nix-hash --path target/*.jar
