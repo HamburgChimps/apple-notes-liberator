@@ -1,7 +1,7 @@
 package de.hamburgchimps.apple.notes.liberator.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "ZICNOTEDATA")

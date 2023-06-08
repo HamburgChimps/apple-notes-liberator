@@ -18,7 +18,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 import picocli.CommandLine.Model.CommandSpec;
 
-import javax.enterprise.context.control.ActivateRequestContext;
+import jakarta.enterprise.context.control.ActivateRequestContext;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
