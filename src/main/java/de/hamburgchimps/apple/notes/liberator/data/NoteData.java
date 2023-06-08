@@ -42,7 +42,7 @@ public class NoteData implements Markdownable {
         NotesCloudObject noteObject = NotesCloudObject.findById(this.note.zNote);
 
         this.title = noteObject.zTitle1;
-        this.folder = noteObject.zFolder.zTitle2;
+        this.folder = (noteObject.zFolder != null) ? noteObject.zFolder.zTitle2 : "unknown";
         this.text = this.getProtoNote().getNoteText();
         this.parseFormattingInformation();
     }
