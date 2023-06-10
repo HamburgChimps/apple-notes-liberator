@@ -25,4 +25,6 @@ public class NotesCloudObject extends Base {
     public NotesCloudObject zFolder;
     public String zFileName;
     public byte[] zMergeableData;
+    public byte[] zMergeableData1;
+    public byte[] zMergeableData2;
 }
