@@ -26,7 +26,9 @@ import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_COLUMNS_KEY
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROOT_IDENTIFIER;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROWS_KEY_NAME;
-import static de.hamburgchimps.apple.notes.liberator.UserMessages.*;
+import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_FIND_DATA;
+import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_FIND_ROOT;
+import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_PARSE_PROTO;
 import static de.hamburgchimps.apple.notes.liberator.data.embedded.TableDirection.DIRECTION_IDENTIFIER_TO_DIRECTION;
 import static de.hamburgchimps.apple.notes.liberator.data.embedded.TableDirection.UNKNOWN;
 
