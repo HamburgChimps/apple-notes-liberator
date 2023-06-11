@@ -7,6 +7,7 @@ import com.ciofecaforensics.Notestore.ObjectID;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ProtocolStringList;
 import de.hamburgchimps.apple.notes.liberator.ProtoUtils;
+import de.hamburgchimps.apple.notes.liberator.Result;
 import de.hamburgchimps.apple.notes.liberator.entity.NotesCloudObject;
 import io.quarkus.logging.Log;
 
@@ -25,6 +26,7 @@ import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_COLUMNS_KEY
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_DIRECTION_KEY_NAME;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROOT_IDENTIFIER;
 import static de.hamburgchimps.apple.notes.liberator.Constants.TABLE_ROWS_KEY_NAME;
+import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_FIND_DATA;
 import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_FIND_ROOT;
 import static de.hamburgchimps.apple.notes.liberator.UserMessages.TABLE_PARSE_ERROR_CANT_PARSE_PROTO;
 import static de.hamburgchimps.apple.notes.liberator.data.embedded.TableDirection.DIRECTION_IDENTIFIER_TO_DIRECTION;
@@ -56,15 +58,25 @@ public class Table implements EmbeddedObjectData {
     private final List<RuntimeException> errors = new ArrayList<>();
 
     public Table(NotesCloudObject notesCloudObject) {
-        var result = ProtoUtils.parseProtoUsingParserFromBytes(MergableDataProto.parser(), notesCloudObject.zMergeableData);
+        var mergeableDataResult = getMergeableData(notesCloudObject);
 
-        if (result.isError()) {
-            Log.error(TABLE_PARSE_ERROR_CANT_PARSE_PROTO, result.error());
-            this.errors.add(result.error());
+        if (mergeableDataResult.isError()) {
+            var error = mergeableDataResult.error();
+            Log.error(TABLE_PARSE_ERROR_CANT_FIND_DATA, error);
+            this.errors.add(error);
             return;
         }
 
-        var proto = result.get();
+        var protoParseResult = ProtoUtils.parseProtoUsingParserFromBytes(MergableDataProto.parser(), mergeableDataResult.get());
+
+        if (protoParseResult.isError()) {
+            var error = protoParseResult.error();
+            Log.error(TABLE_PARSE_ERROR_CANT_PARSE_PROTO, error);
+            this.errors.add(error);
+            return;
+        }
+
+        var proto = protoParseResult.get();
 
         var data = proto
                 .getMergableDataObject()
@@ -243,5 +255,21 @@ public class Table implements EmbeddedObjectData {
         this.data = IntStream.range(0, this.numRows)
                 .mapToObj((i) -> new ArrayList<>(Collections.nCopies(this.numColumns, "")))
                 .collect(Collectors.toList());
+    }
+
+    private Result<byte[], RuntimeException> getMergeableData(NotesCloudObject notesCloudObject) {
+        if (notesCloudObject.zMergeableData != null) {
+            return Result.Ok(notesCloudObject.zMergeableData);
+        }
+
+        if (notesCloudObject.zMergeableData1 != null) {
+            return Result.Ok(notesCloudObject.zMergeableData1);
+        }
+
+        if (notesCloudObject.zMergeableData2 != null) {
+            return Result.Ok(notesCloudObject.zMergeableData2);
+        }
+
+        return Result.Error(new RuntimeException("No data found in any of the expected columns"));
     }
 }

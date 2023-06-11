@@ -10,5 +10,6 @@ public class UserMessages {
     public static final String EMBEDDED_OBJECT_PARSE_ERROR_IDENTIFIER_DOES_NOT_EXIST = String.format("%s there is no object with that identifier in notes database", EMBEDDED_OBJECT_PARSE_ERROR);
     public static final String EMBEDDED_OBJECT_PARSE_ERROR_NO_TYPE_IDENTIFIER = String.format("%s no type identifier present", EMBEDDED_OBJECT_PARSE_ERROR);
     public static final String TABLE_PARSE_ERROR_CANT_FIND_ROOT = "Failed to parse table: unable to find root table";
+    public static final String TABLE_PARSE_ERROR_CANT_FIND_DATA = "Failed to parse table: unable to find data in expected columns";
     public static final String TABLE_PARSE_ERROR_CANT_PARSE_PROTO = "Failed to parse table";
 }
