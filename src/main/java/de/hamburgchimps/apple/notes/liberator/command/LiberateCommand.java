@@ -137,7 +137,7 @@ public class LiberateCommand implements Runnable, QuarkusApplication {
             throw new RuntimeException(String.format(UserMessages.NOTES_DATABASE_DOES_NOT_EXIST_AT_SPECIFIED_PATH, this.noteStoreDb.getPath()));
         }
 
-        this.noteStoreDb = new File(Constants.NOTE_STORE_PATH);
+        this.noteStoreDb = (this.noteStoreDb == null) ? new File(Constants.NOTE_STORE_PATH) : this.noteStoreDb;
 
         if (!this.noteStoreDb.exists()) {
             throw new RuntimeException(UserMessages.CANNOT_AUTOMATICALLY_FIND_NOTES_DATABASE);
