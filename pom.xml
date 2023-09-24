@@ -12,10 +12,16 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-    <quarkus.platform.version>3.1.1.Final</quarkus.platform.version>
+    <quarkus.platform.version>3.4.1</quarkus.platform.version>
+    <quarkus-jdbc-sqlite.version>3.0.6</quarkus-jdbc-sqlite.version>
+    <protobuf-java.version>3.24.0</protobuf-java.version>
+    <jackson-databind.version>2.15.2</jackson-databind.version>
+    <jackson-datatype-protobuf.version>0.9.14</jackson-datatype-protobuf.version>
     <quarkus.package.type>uber-jar</quarkus.package.type>
     <skipITs>true</skipITs>
     <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
+    <protoc-jar-plugin.version>3.11.4</protoc-jar-plugin.version>
+    <protoc.version>3.24.0</protoc.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -44,22 +50,22 @@
     <dependency>
       <groupId>io.quarkiverse.jdbc</groupId>
       <artifactId>quarkus-jdbc-sqlite</artifactId>
-      <version>3.0.5</version>
+      <version>${quarkus-jdbc-sqlite.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.protobuf</groupId>
       <artifactId>protobuf-java</artifactId>
-      <version>3.22.2</version>
+      <version>${protobuf-java.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.14.2</version>
+      <version>${jackson-databind.version}</version>
     </dependency>
     <dependency>
       <groupId>com.hubspot.jackson</groupId>
       <artifactId>jackson-datatype-protobuf</artifactId>
-      <version>0.9.13</version>
+      <version>${jackson-datatype-protobuf.version}</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -87,7 +93,7 @@
       <plugin>
         <groupId>com.github.os72</groupId>
         <artifactId>protoc-jar-maven-plugin</artifactId>
-        <version>3.11.4</version>
+        <version>${protoc-jar-plugin.version}</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
@@ -97,7 +103,7 @@
             <configuration>
               <!-- Use a newer version of protobuf to allow building on Apple Silicon.
                    See https://github.com/os72/protoc-jar/issues/93#issuecomment-1142635897 -->
-	          <protocArtifact>com.google.protobuf:protoc:3.21.1</protocArtifact>
+	          <protocArtifact>com.google.protobuf:protoc:${protoc.version}</protocArtifact>
               <inputDirectories>
                 <include>src/main/proto</include>
               </inputDirectories>
